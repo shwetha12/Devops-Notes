@@ -22,3 +22,18 @@ What happens internally when you run `docker run`?
 6. Kubernetes pods are running but users receive 503 errors. What will you check?
 7. How does Kubernetes Service Discovery work?
 8. Explain ConfigMaps and Secrets. How do you manage them across environments?
+========================
+
+An application's expected latency is 1 second, but in production it's taking 5 seconds. What could be the possible root causes, and how would you troubleshoot and resolve the issue?
+🔹 Kubernetes Troubleshooting
+What is a CrashLoopBackOff, and what steps would you follow to resolve it?
+🔹 Observability
+How would you integrate Prometheus and Grafana with a Kubernetes cluster?
+🔹 Incident Response
+You receive a Prometheus alert stating "NODE_0 ERROR". What are your immediate next steps, and how would you identify and fix the issue?
+🔹 Kubernetes Workloads
+What are the key differences between a Deployment, StatefulSet, and DaemonSet?
+🔹 Kubernetes Operations
+What is the purpose of the kubectl rollout command, and when is it commonly used?
+🔹 Kubernetes Architecture
+What is etcd? If it crashes or is accidentally deleted, what impact does it have on the Kubernetes cluster?
