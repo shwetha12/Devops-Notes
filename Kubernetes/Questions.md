@@ -37,3 +37,49 @@ What are the key differences between a Deployment, StatefulSet, and DaemonSet?
 What is the purpose of the kubectl rollout command, and when is it commonly used?
 🔹 Kubernetes Architecture
 What is etcd? If it crashes or is accidentally deleted, what impact does it have on the Kubernetes cluster?
+==================
+
+3. How would you schedule a pod on a specific node group in Kubernetes?
+Expected discussion:
+✅ Node Labels
+✅ Node Selectors
+✅ Taints and Tolerations
+✅ Node Affinity
+4. What are Affinity and Anti-Affinity Rules?
+Expected discussion:
+✅ Node Affinity
+✅ Pod Affinity
+✅ Pod Anti-Affinity
+✅ preferredDuringSchedulingIgnoredDuringExecution
+✅ requiredDuringSchedulingIgnoredDuringExecution
+5. How would you troubleshoot a pod stuck in Pending state?
+Expected discussion:
+✅ kubectl describe pod
+✅ Resource constraints
+✅ Node availability
+✅ Taints and tolerations
+✅ PVC issues
+✅ Scheduler events
+6. How would you design a CI/CD pipeline for a Kubernetes application?
+Expected discussion:
+✅ GitHub → Jenkins
+✅ Docker build
+✅ Image scanning
+✅ Push to registry
+✅ Helm deployment
+✅ Rollback strategy
+7. Difference between Horizontal Pod Autoscaler (HPA) and Cluster Autoscaler?
+Expected discussion:
+✅ HPA scales pods
+✅ Cluster Autoscaler scales nodes
+✅ Metrics Server integration
+✅ Resource optimization
+
+
+
+
+
+
+
+
+
