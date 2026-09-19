@@ -13,3 +13,5 @@ Terraform & Cloud**
 5. Explain your Terraform module structure for multiple environments.
 6. Difference between IAM Roles and IAM Policies.
 7. Explain VPC, Subnets, NAT Gateway, and Internet Gateway.
+============
+How does for_each differ from count, and when would you choose one over the other?
