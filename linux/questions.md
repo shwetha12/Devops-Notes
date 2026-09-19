@@ -1,2 +1,4 @@
-How do you check system resources on a Linux server?
-- Use top command
+## Question 1
+**How do you check system resources on a Linux server?**
+
+**Answer:** Use the `top` command.
