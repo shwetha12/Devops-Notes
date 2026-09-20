@@ -84,6 +84,51 @@ They want to know:
 🔹 How you automate repetitive tasks
 🔹 How you handle real-world Kubernetes and CI/CD challenges
 
+===========
+
+Explain the complete request flow from a browser to a Kubernetes Pod.
+What happens internally when you run a Docker container?
+How does Kubernetes decide which node should run a Pod?
+What is the difference between Readiness, Liveness, and Startup Probes?
+Why can a Pod be in the Running state while the application is still unavailable?
+Why is a Pod stuck in CrashLoopBackOff?
+How do you troubleshoot CrashLoopBackOff?
+What is the difference between Deployment, StatefulSet, DaemonSet, and Job?
+How would you schedule a Pod on a specific node group?
+What are Node Labels, Node Selectors, Taints/Tolerations, and Node Affinity?
+What are Affinity and Anti-Affinity rules?
+How would you troubleshoot a Pod stuck in Pending state?
+What are the worker-node components?
+What is imagePullPolicy?
+What happens when a Pod becomes unhealthy?
+How does Kubernetes recover an unhealthy Pod?
+How do you ensure zero-downtime deployments?
+Explain rolling updates and rollbacks.
+What is the difference between Pod, Deployment, ReplicaSet, StatefulSet, and DaemonSet?
+What is the difference between ClusterIP, NodePort, and LoadBalancer?
+What are Taints and Tolerations?
+What is kube-proxy?
+What are the different types of Kubernetes Services?
+What is a Headless Service and how does it work?
+What is a NodePort Service?
+How do you restart a Kubernetes Deployment?
+How do you perform an application health check?
+Which probe acts first — Startup, Readiness, or Liveness?
+How would you move workloads from an unhealthy node to a healthy node in production?
+What is the difference between Taint and Cordon?
+What is HPA and how is it different from Cluster Autoscaler?
+How do you troubleshoot Kubernetes networking?
+How do you handle uneven traffic distribution across Pods?
+What happens when Pods are running but the application returns HTTP 503?
+How do you perform an EKS/AKS upgrade?
+How do you troubleshoot Master/Control Plane and Worker Node communication issues?
+
+
+
+=================
+
+
+
 
 
 
