@@ -49,4 +49,34 @@ Expected discussion:
 16. What is the difference between a virtual machine and a container?
 
 =============================================================================================
+How is Jenkins used in a real-world CI/CD pipeline?
+What pipeline stages have you used?
+What are the best practices for structuring pipeline stages?
+Which deployment strategies have you used?
+How do you implement Blue-Green deployment?
+How do you implement Canary deployment?
+How do you implement Rolling Update?
+How do you integrate Jenkins with GitHub?
+What is the difference between GitHub Webhooks and Poll SCM?
+How do Jenkins credentials work?
+How do you design a CI/CD pipeline for a Kubernetes application?
+What happens after a code commit?
+Explain the build, Docker image, and deployment flow.
+Explain your end-to-end CI/CD pipeline.
+Explain the pre-build, build, and post-build stages in your CI/CD pipeline.
+At which stage do you publish Maven artifacts (JAR/WAR) to Artifactory?
+Apart from Jenkins and GitHub Actions, which other CI/CD tools have you worked with?
+What happens when a Jenkins server is not accessible?
+How do you debug a failed Jenkins pipeline?
+How do you pass secrets securely in Jenkins pipelines?
+What types of pipeline failures have you encountered during build or deployment?
+Jenkins job is not triggering after a Git commit — how do you fix it?
+
+
+
+
+====================
+
+
+
 
