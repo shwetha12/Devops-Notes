@@ -35,4 +35,19 @@ What is DevOps, and how is it different from Agile?
 
 
 ==================================
+Production / Troubleshooting
+What was the last production issue you faced and how did you resolve it?
+A Pod is running but the application returns 503 — what do you check?
+HPA is not scaling — how do you troubleshoot it?
+Desired replicas are 5 but only 3 are Ready — how do you troubleshoot?
+A pipeline succeeds but deployment fails — how do you troubleshoot it?
+A build works locally but fails in CI — how do you investigate?
+How do you handle a production rollback?
+How do you troubleshoot application latency when CPU and memory are normal?
+How do you handle production incidents and perform RCA?
+
+
+================
+
+
 
