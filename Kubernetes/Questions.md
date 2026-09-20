@@ -76,6 +76,14 @@ Expected discussion:
 ✅ Resource optimization
 
 
+============
+
+They want to know:
+🔹 How you troubleshoot production issues
+🔹 How you design systems
+🔹 How you automate repetitive tasks
+🔹 How you handle real-world Kubernetes and CI/CD challenges
+
 
 
 
