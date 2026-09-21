@@ -22,6 +22,13 @@ What is the difference between a multi-stage Dockerfile and a distroless Dockerf
 How do you write a multi-stage Dockerfile?
 How do you create a sample Dockerfile for an application?
 
+===========
+
+1. You have a Java application running inside a Docker container on a VM. If the process has one PID inside the container and another PID on the host, which PiD is greater and why?
+2. Write a simple Dockerfile for a Java 17 application using an Alpine-based image.
+
+===============
+
 
 
 =====================================================
