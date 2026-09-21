@@ -127,6 +127,19 @@ How do you troubleshoot Master/Control Plane and Worker Node communication issue
 
 =================
 
+3. How do you configure sticky sessions in Kubernetes?
+4. What is the difference between StatefulSet and Deployment?
+5. How do PersistentVolumes (PV) and PersistentVolumeClaims (PVC) work?
+6. What happens internally when you apply a StatefulSet YAML?
+7. Let's say in Kubernetes users has reported latency related issues while accessing the application how will you fix this issue give me ans in layer wise approach.
+
+
+
+===========================
+
+
+
+
 
 
 
