@@ -76,6 +76,19 @@ Jenkins job is not triggering after a Git commit — how do you fix it?
 
 
 ====================
+ Pipeline succeeds but deployment fails. Why?
+• How do you implement zero-downtime deployment?
+• Blue-Green vs Canary deployment?
+• How do you safely roll back a failed release?
+
+=====================================
+
+
+
+
+
+
+
 
 
 
