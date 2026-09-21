@@ -37,4 +37,11 @@ What is an inode and how does it relate to files?
 
 
 ==============================
+• How do you troubleshoot high CPU or memory usage?
+• Server is reachable but the application isn't. What do you check?
+• How do you troubleshoot disk and network issues?
+
+
+==================================
+
 
