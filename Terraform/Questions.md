@@ -41,6 +41,11 @@ How would you create a VPC and private subnets using Terraform?
 
 
 =================
+Write a Terraform configuration to launch an Ubuntu EC2 instance using "t2.micro".
+9. Explain the AWS provider configuration in Terraform.
+
+========================
+
 
 
 
