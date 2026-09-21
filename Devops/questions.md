@@ -38,3 +38,49 @@ Tell me about yourself.
 16. What is Docker and why is it used in a DevOps environment?
 17. How do you troubleshoot a failed Jenkins pipeline?
 18. How do you monitor AWS resources in your project?
+
+===================
+
+. Kubernetes
+• If you want to deploy a three-tier application, what YAML files would you need to create?
+4. Docker
+• If you have a frontend, backend, and database, would you use one Dockerfile or separate Dockerfiles for each? Explain why.
+5. Docker
+• Where would you store the Docker images?
+6. Kubernetes
+• Explain the YAML files you would need to host an application.
+7. AWS / Automation
+• If you have 10 EC2 instances and need to install packages on all of them, how would you configure the instances without manually configuring each one?
+8. Jenkins
+• What is the Jenkins home directory?
+9. Jenkins + GitHub
+• How do you pull code from GitHub through Jenkins?
+• What plugins would you install?
+10. Jenkins + Docker
+• Where do you configure Docker credentials in Jenkins?
+11. GitHub + Jenkins
+• How do you authenticate GitHub with Jenkins?
+12. Kubernetes
+• Explain the difference between Ingress and Service.
+. If i want do deploy an application what are the yaml files  i need to create ?
+13. Kubernetes Troubleshooting
+• How would you troubleshoot ImagePullBackOff?
+• What are the possible causes?
+14. Kubernetes Troubleshooting
+• How would you troubleshoot CrashLoopBackOff?
+• What are the possible causes?
+15. Docker / Database
+• If a database is accidentally deleted from Docker, how would you make sure backups are available in the future?
+16. Jenkins
+• Write a Jenkins pipeline.
+17. Terraform
+• What is Terraform?
+• What is a .tf file?
+• How do you install Terraform providers/plugins?
+18. Terraform
+• What is the difference between desired state and actual state?
+
+
+
+
+========================
