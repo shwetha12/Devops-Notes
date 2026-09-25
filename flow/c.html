@@ -1,820 +1,2913 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>DevOps - Portal to Kubernetes Deployment Workflow</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-    * {
-        box-sizing: border-box;
-    }
+    <title>DevOps - Application Deployment Path</title>
 
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f4f7fb;
-        color: #1f2937;
-    }
+    <style>
 
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 30px 20px 60px;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 8px;
-        color: #172554;
-    }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
 
-    .subtitle {
-        text-align: center;
-        color: #64748b;
-        margin-bottom: 35px;
-    }
+        .container {
+            max-width: 1250px;
+            margin: auto;
+            padding: 35px 20px 70px;
+        }
 
-    /* =========================
-       MAIN WORKFLOW
-       ========================= */
+        /* =====================================================
+           PAGE HEADER
+           ===================================================== */
 
-    .workflow {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-    }
+        h1 {
+            text-align: center;
+            color: #172554;
+            font-size: 34px;
+            margin: 0 0 8px;
+        }
 
-    .box {
-        width: 100%;
-        max-width: 850px;
-        background: white;
-        border: 2px solid #2563eb;
-        border-radius: 12px;
-        padding: 18px 22px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        cursor: pointer;
-        transition: 0.2s;
-    }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 35px;
+        }
 
-    .box:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 7px 18px rgba(0,0,0,0.12);
-    }
 
-    .box h2 {
-        margin: 0;
-        font-size: 21px;
-        color: #1d4ed8;
-    }
+        /* =====================================================
+           MAIN WORKFLOW
+           ===================================================== */
 
-    .box p {
-        margin: 7px 0 0;
-        color: #475569;
-    }
+        .workflow {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .arrow {
-        font-size: 30px;
-        color: #2563eb;
-        height: 42px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
 
-    /* =========================
-       SUB RESOURCES
-       ========================= */
+        /* =====================================================
+           MAIN WORKFLOW BOX
+           ===================================================== */
 
-    .subflow {
-        margin-top: 18px;
-        padding: 18px;
-        background: #f8fafc;
-        border-left: 4px solid #60a5fa;
-        border-radius: 8px;
-    }
+        .main-box {
+            width: 100%;
+            max-width: 950px;
 
-    .subflow-title {
-        font-weight: bold;
-        margin-bottom: 12px;
-        color: #1e3a8a;
-    }
+            background: #ffffff;
 
-    .resource {
-        background: white;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        padding: 10px 14px;
-        margin: 8px 0;
-    }
+            border: 2px solid #2563eb;
+            border-radius: 12px;
 
-    .resource strong {
-        color: #334155;
-    }
+            padding: 20px 24px;
 
-    .nested {
-        margin-left: 20px;
-        margin-top: 6px;
-    }
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
 
-    .small-arrow {
-        color: #64748b;
-        margin-right: 6px;
-    }
+            cursor: pointer;
 
-    /* =========================
-       DETAILS
-       ========================= */
+            transition: all 0.2s ease;
+        }
 
-    details {
-        width: 100%;
-        max-width: 850px;
-        margin: 12px 0;
-        background: white;
-        border-radius: 10px;
-        border: 1px solid #dbe3ee;
-    }
+        .main-box:hover {
+            transform: translateY(-2px);
 
-    summary {
-        cursor: pointer;
-        padding: 15px 18px;
-        font-weight: bold;
-        color: #1e40af;
-    }
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.10);
+        }
 
-    .details-content {
-        padding: 0 20px 20px;
-        line-height: 1.6;
-    }
+        .main-box h2 {
+            margin: 0;
 
-    ul {
-        margin-top: 8px;
-    }
+            color: #1d4ed8;
 
-    li {
-        margin-bottom: 5px;
-    }
+            font-size: 21px;
+        }
 
-    code {
-        background: #eef2ff;
-        padding: 2px 6px;
-        border-radius: 4px;
-    }
+        .main-box p {
+            margin: 7px 0 0;
 
-    .memory {
-        max-width: 850px;
-        margin: 0 auto 30px;
-        padding: 18px;
-        background: #eff6ff;
-        border: 1px solid #93c5fd;
-        border-radius: 10px;
-    }
+            color: #475569;
 
-    .memory strong {
-        color: #1e40af;
-    }
+            font-size: 15px;
+        }
 
-    .note {
-        padding: 12px;
-        background: #f8fafc;
-        border-left: 4px solid #94a3b8;
-        margin-top: 12px;
-    }
-</style>
+
+        /* =====================================================
+           ARROWS
+           ===================================================== */
+
+        .arrow {
+            height: 45px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #2563eb;
+
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           SUB RESOURCES
+           ===================================================== */
+
+        .subflow {
+            margin-top: 18px;
+
+            padding: 15px;
+
+            background: #f8fafc;
+
+            border-left: 4px solid #60a5fa;
+
+            border-radius: 8px;
+        }
+
+        .subflow-title {
+            font-weight: bold;
+
+            color: #1e3a8a;
+
+            margin-bottom: 12px;
+        }
+
+
+        .resource {
+            background: #ffffff;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            padding: 11px 14px;
+
+            margin: 8px 0;
+        }
+
+        .resource-name {
+            font-weight: bold;
+
+            color: #1f2937;
+
+            font-size: 15px;
+        }
+
+        .resource-description {
+            margin-top: 4px;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           TERRAFORM RESOURCE
+           ===================================================== */
+
+        .terraform-resource {
+            background: #ffffff;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            padding: 12px 15px;
+
+            margin: 9px 0;
+        }
+
+        .terraform-title {
+            font-weight: bold;
+
+            color: #334155;
+
+            font-size: 15px;
+        }
+
+        .terraform-purpose {
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-top: 4px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           DETAILS
+           ===================================================== */
+
+        details {
+            width: 100%;
+            max-width: 950px;
+
+            margin: 15px auto;
+
+            background: #ffffff;
+
+            border: 1px solid #dbe3ee;
+
+            border-radius: 10px;
+        }
+
+        summary {
+            cursor: pointer;
+
+            padding: 17px 20px;
+
+            color: #1e40af;
+
+            font-weight: bold;
+
+            font-size: 16px;
+        }
+
+        .details-content {
+            padding: 0 22px 25px;
+
+            line-height: 1.65;
+        }
+
+        .details-content h3 {
+            color: #1e3a8a;
+
+            margin-top: 22px;
+        }
+
+
+        /* =====================================================
+           NOTES
+           ===================================================== */
+
+        .note {
+            margin: 15px 0;
+
+            padding: 13px 15px;
+
+            background: #eff6ff;
+
+            border-left: 4px solid #3b82f6;
+
+            border-radius: 5px;
+
+            line-height: 1.55;
+        }
+
+        .important {
+            margin: 15px 0;
+
+            padding: 13px 15px;
+
+            background: #f8fafc;
+
+            border-left: 4px solid #64748b;
+
+            border-radius: 5px;
+
+            line-height: 1.55;
+        }
+
+
+        /* =====================================================
+           CODE
+           ===================================================== */
+
+        .code-title {
+            margin-top: 20px;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            color: #1e3a8a;
+        }
+
+        pre {
+            background: #111827;
+
+            color: #e5e7eb;
+
+            padding: 18px;
+
+            border-radius: 8px;
+
+            overflow-x: auto;
+
+            font-family:
+                Consolas,
+                "Courier New",
+                monospace;
+
+            font-size: 13px;
+
+            line-height: 1.55;
+        }
+
+
+        /* =====================================================
+           FINAL HIGH LEVEL FLOW
+           ===================================================== */
+
+        .final-flow {
+            max-width: 950px;
+
+            margin: 40px auto 0;
+
+            background: #ffffff;
+
+            border: 2px solid #1e40af;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .final-flow h2 {
+            color: #1e3a8a;
+
+            margin-top: 0;
+        }
+
+        .final-step {
+            padding: 13px 15px;
+
+            margin: 8px 0;
+
+            background: #f8fafc;
+
+            border-radius: 7px;
+
+            border: 1px solid #dbe3ee;
+        }
+
+        .final-step strong {
+            color: #1e40af;
+        }
+
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .container {
+                padding: 22px 12px 50px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .main-box {
+                padding: 17px;
+            }
+
+            pre {
+                font-size: 12px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
 <div class="container">
 
-    <h1>DevOps End-to-End Deployment Workflow</h1>
+
+    <!-- =====================================================
+         TITLE
+         ===================================================== -->
+
+    <h1>DevOps</h1>
 
     <div class="subtitle">
-        Internal Portal → Backstage → EKS → Rafay → Resource Templates → Helm → Kubernetes → Microservice
-    </div>
-
-    <div class="memory">
-        <strong>30-Second Flow:</strong><br><br>
-
-        Internal Portal
-        → Backstage Workflow API
-        → EKS Cluster Provisioning
-        → EKS Cluster Ready
-        → Rafay Environment Template
-        → Resource Templates
-        → Terraform / OpenTofu
-        → Application Prerequisites Ready
-        → Helm
-        → Kubernetes Workload
-        → Microservice Running
+        Application Deployment Path
     </div>
 
 
-    <!-- =========================================================
-         ONE WORKFLOW STARTS HERE
-         ========================================================= -->
+    <!-- =====================================================
+         ONE COMPLETE WORKFLOW
+         ===================================================== -->
 
     <div class="workflow">
 
-        <!-- 1. INTERNAL PORTAL -->
-        <div class="box" onclick="openSection('portal')">
+
+        <!-- =================================================
+             1. INTERNAL PORTAL
+             ================================================= -->
+
+        <div class="main-box" onclick="openSection('portal')">
+
             <h2>1. Internal Portal</h2>
-            <p>Enter application / microservice onboarding information</p>
-        </div>
 
-        <div class="arrow">↓</div>
-
-
-        <!-- 2. BACKSTAGE -->
-        <div class="box" onclick="openSection('backstage')">
-            <h2>2. Backstage Workflow API</h2>
-            <p>Internal Portal calls the Backstage workflow/API</p>
-        </div>
-
-        <div class="arrow">↓</div>
-
-
-        <!-- 3. EKS PROVISIONING -->
-        <div class="box" onclick="openSection('eks')">
-            <h2>3. EKS Cluster Provisioning</h2>
-            <p>Provision the Kubernetes environment required to run applications</p>
+            <p>
+                Application onboarding information is entered
+                to start the deployment and environment workflow.
+            </p>
 
             <div class="subflow">
 
                 <div class="subflow-title">
-                    Resources commonly involved
+                    Typical information
                 </div>
 
                 <div class="resource">
-                    <strong>VPC</strong>
-                </div>
+                    <div class="resource-name">
+                        Application / Microservice
+                    </div>
 
-                <div class="resource">
-                    <strong>Subnets</strong>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Public / Private Subnets
+                    <div class="resource-description">
+                        Identifies the application that will be deployed.
                     </div>
                 </div>
 
                 <div class="resource">
-                    <strong>Routing</strong>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Route Tables
+                    <div class="resource-name">
+                        Application Version
                     </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Internet Gateway
-                    </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        NAT Gateway
+
+                    <div class="resource-description">
+                        Identifies the application release or version being deployed.
                     </div>
                 </div>
 
                 <div class="resource">
-                    <strong>Security</strong>
+                    <div class="resource-name">
+                        Docker Image / Artifact
+                    </div>
+
+                    <div class="resource-description">
+                        Identifies the application package or container image to deploy.
+                    </div>
+                </div>
+
+                <div class="resource">
+                    <div class="resource-name">
+                        Target Environment
+                    </div>
+
+                    <div class="resource-description">
+                        Identifies where the application should be deployed.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <!-- =================================================
+             2. BACKSTAGE
+             ================================================= -->
+
+        <div class="main-box" onclick="openSection('backstage')">
+
+            <h2>2. Backstage Workflow API</h2>
+
+            <p>
+                The Internal Portal calls the Backstage workflow/API
+                to start the automation.
+            </p>
+
+            <div class="subflow">
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        Internal Portal
+                    </div>
+
+                    <div class="resource-description">
+                        Sends the application and environment information
+                        through an API request.
+                    </div>
+
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        Backstage Workflow
+                    </div>
+
+                    <div class="resource-description">
+                        Orchestrates the provisioning and configuration
+                        steps defined by the automation.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <!-- =================================================
+             3. EKS PROVISIONING
+             ================================================= -->
+
+        <div class="main-box" onclick="openSection('eks')">
+
+            <h2>3. EKS Provisioning</h2>
+
+            <p>
+                AWS infrastructure and the Kubernetes environment
+                are created or prepared.
+            </p>
+
+            <div class="subflow">
+
+                <div class="subflow-title">
+                    Common components
+                </div>
+
+
+                <!-- VPC -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        VPC
+                    </div>
+
+                    <div class="resource-description">
+                        Provides the isolated AWS network in which
+                        the Kubernetes environment operates.
+                    </div>
+
+                </div>
+
+
+                <!-- SUBNETS -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        Subnets
+                    </div>
+
+                    <div class="resource-description">
+                        Divide the VPC into network segments where
+                        cluster and application resources can run.
+                    </div>
+
                     <div class="nested">
-                        <span class="small-arrow">↳</span>
+                        ↳ Public Subnets
+                    </div>
+
+                    <div class="nested">
+                        ↳ Private Subnets
+                    </div>
+
+                </div>
+
+
+                <!-- ROUTING -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        Routing
+                    </div>
+
+                    <div class="resource-description">
+                        Controls how traffic moves between the VPC,
+                        subnets, AWS services, and external networks.
+                    </div>
+
+                    <div class="nested">
+                        ↳ Route Tables
+                    </div>
+
+                    <div class="nested">
+                        ↳ Internet Gateway
+                    </div>
+
+                    <div class="nested">
+                        ↳ NAT Gateway
+                    </div>
+
+                </div>
+
+
+                <!-- IAM -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        IAM
+                    </div>
+
+                    <div class="resource-description">
+                        Provides AWS identities and permissions required
+                        by EKS, worker nodes, and workloads.
+                    </div>
+
+                    <div class="nested">
+                        ↳ EKS Cluster Role
+                    </div>
+
+                    <div class="nested">
+                        ↳ Node Role
+                    </div>
+
+                    <div class="nested">
+                        ↳ IAM Policies
+                    </div>
+
+                </div>
+
+
+                <!-- SECURITY GROUP -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
                         Security Groups
                     </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        IAM Roles / Policies
+
+                    <div class="resource-description">
+                        Control inbound and outbound network traffic
+                        for AWS resources.
                     </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        KMS / Encryption if required
-                    </div>
+
                 </div>
 
-                <div class="resource">
-                    <strong>EKS Cluster</strong>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        EKS Control Plane
-                    </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Managed Node Groups
-                    </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        EC2 Worker Nodes
-                    </div>
-                </div>
+
+                <!-- KMS -->
 
                 <div class="resource">
-                    <strong>EKS Add-ons</strong>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        VPC CNI
+
+                    <div class="resource-name">
+                        KMS
                     </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        CoreDNS
+
+                    <div class="resource-description">
+                        Provides encryption keys when encryption is
+                        required for cluster or application data.
                     </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        kube-proxy
+
+                </div>
+
+
+                <!-- EKS -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        EKS
                     </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        EBS CSI Driver
+
+                    <div class="resource-description">
+                        Provides the managed Kubernetes control plane
+                        for running containerized workloads on AWS.
                     </div>
+
+                </div>
+
+
+                <!-- NODE GROUP -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        Node Groups
+                    </div>
+
+                    <div class="resource-description">
+                        Provide the worker compute capacity where
+                        Kubernetes Pods run.
+                    </div>
+
+                    <div class="nested">
+                        ↳ EC2 Worker Nodes
+                    </div>
+
+                </div>
+
+
+                <!-- ADDONS -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        EKS Add-ons
+                    </div>
+
+                    <div class="resource-description">
+                        Provide common Kubernetes/AWS integration
+                        components needed by the cluster.
+                    </div>
+
+                    <div class="nested">
+                        ↳ VPC CNI
+                    </div>
+
+                    <div class="nested">
+                        ↳ CoreDNS
+                    </div>
+
+                    <div class="nested">
+                        ↳ kube-proxy
+                    </div>
+
+                    <div class="nested">
+                        ↳ EBS CSI Driver
+                    </div>
+
                 </div>
 
             </div>
+
         </div>
+
 
         <div class="arrow">↓</div>
 
 
-        <!-- 4. CLUSTER READY -->
-        <div class="box">
+        <!-- =================================================
+             EKS READY
+             ================================================= -->
+
+        <div class="main-box">
+
             <h2>EKS Cluster Ready</h2>
-            <p>Kubernetes cluster is available for application environments</p>
+
+            <p>
+                The Kubernetes platform is available for the
+                application environment and workload deployment.
+            </p>
+
         </div>
+
 
         <div class="arrow">↓</div>
 
 
-        <!-- 5. RAFAY -->
-        <div class="box" onclick="openSection('rafay')">
-            <h2>4. Rafay Environment Template</h2>
-            <p>Launch the environment and execute the required resource templates</p>
+        <!-- =================================================
+             4. RAFAY
+             ================================================= -->
+
+        <div class="main-box" onclick="openSection('rafay')">
+
+            <h2>4. Rafay</h2>
+
+            <p>
+                The application environment is launched and the
+                required resource templates are executed.
+            </p>
 
             <div class="subflow">
 
                 <div class="resource">
-                    <strong>Rafay Project</strong>
+
+                    <div class="resource-name">
+                        Project
+                    </div>
+
+                    <div class="resource-description">
+                        Provides a logical boundary for organizing
+                        environments, resources, and application
+                        deployments.
+                    </div>
+
                 </div>
 
-                <div class="resource">
-                    <strong>Environment Template</strong>
-                </div>
 
                 <div class="resource">
-                    <strong>Launch Environment</strong>
+
+                    <div class="resource-name">
+                        Environment Template
+                    </div>
+
+                    <div class="resource-description">
+                        Defines the collection of resources and
+                        automation used to create an application environment.
+                    </div>
+
                 </div>
 
+
                 <div class="resource">
-                    <strong>Rafay Agent</strong>
+
+                    <div class="resource-name">
+                        Rafay Agent
+                    </div>
+
+                    <div class="resource-description">
+                        Provides the execution mechanism used to
+                        communicate with and manage resources in the environment.
+                    </div>
+
                 </div>
 
             </div>
+
         </div>
+
 
         <div class="arrow">↓</div>
 
 
-        <!-- 6. RESOURCE TEMPLATES -->
-        <div class="box" onclick="openSection('resources')">
+        <!-- =================================================
+             5. RESOURCE TEMPLATES
+             ================================================= -->
+
+        <div class="main-box" onclick="openSection('resources')">
+
             <h2>5. Resource Templates</h2>
-            <p>Provision supporting application / environment prerequisites</p>
+
+            <p>
+                Supporting infrastructure and application prerequisites
+                are provisioned before application deployment.
+            </p>
 
             <div class="subflow">
 
                 <div class="subflow-title">
-                    Common supporting resources
+                    Infrastructure / application prerequisites
                 </div>
 
-                <div class="resource">
-                    <strong>Terraform / OpenTofu</strong>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        S3 / Application Storage
+
+                <!-- TERRAFORM S3 -->
+
+                <div class="terraform-resource">
+
+                    <div class="terraform-title">
+                        Terraform / OpenTofu → S3
                     </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        IAM Roles / Policies
+
+                    <div class="terraform-purpose">
+                        Provides object storage for application data,
+                        files, artifacts, configuration, or other
+                        application-specific storage needs.
                     </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Secrets / Vault Integration
-                    </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Security / Access Configuration
-                    </div>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Other Application Dependencies
-                    </div>
+
                 </div>
 
-                <div class="resource">
-                    <strong>Configuration / Environment Setup</strong>
+
+                <!-- TERRAFORM IAM -->
+
+                <div class="terraform-resource">
+
+                    <div class="terraform-title">
+                        Terraform / OpenTofu → IAM
+                    </div>
+
+                    <div class="terraform-purpose">
+                        Provides AWS permissions required by the
+                        application or supporting AWS services.
+                    </div>
+
                 </div>
 
-                <div class="resource">
-                    <strong>Outputs + Execution Logs</strong>
+
+                <!-- VAULT -->
+
+                <div class="terraform-resource">
+
+                    <div class="terraform-title">
+                        Terraform / OpenTofu → Vault Integration
+                    </div>
+
+                    <div class="terraform-purpose">
+                        Provides secure access to application secrets
+                        without placing sensitive values directly
+                        in application configuration or source code.
+                    </div>
+
+                </div>
+
+
+                <!-- RSA SSH -->
+
+                <div class="terraform-resource">
+
+                    <div class="terraform-title">
+                        Terraform / OpenTofu → RSA / SSH Configuration
+                    </div>
+
+                    <div class="terraform-purpose">
+                        Provides key-based authentication when an
+                        application or supporting process requires
+                        secure SSH access.
+                    </div>
+
+                </div>
+
+
+                <!-- OTHER -->
+
+                <div class="terraform-resource">
+
+                    <div class="terraform-title">
+                        Other Application Prerequisites
+                    </div>
+
+                    <div class="terraform-purpose">
+                        Additional AWS resources, configuration, or
+                        integrations required by a particular application.
+                    </div>
+
                 </div>
 
             </div>
+
         </div>
+
 
         <div class="arrow">↓</div>
 
 
-        <!-- 7. ENVIRONMENT READY -->
-        <div class="box">
+        <!-- =================================================
+             APPLICATION ENVIRONMENT READY
+             ================================================= -->
+
+        <div class="main-box">
+
             <h2>Application Environment Ready</h2>
-            <p>Required supporting resources are available</p>
+
+            <p>
+                Required supporting resources are available and the
+                application can proceed to Kubernetes deployment.
+            </p>
+
         </div>
+
 
         <div class="arrow">↓</div>
 
 
-        <!-- 8. HELM -->
-        <div class="box" onclick="openSection('helm')">
+        <!-- =================================================
+             6. HELM
+             ================================================= -->
+
+        <div class="main-box" onclick="openSection('helm')">
+
             <h2>6. Helm Application Deployment</h2>
-            <p>Helm deploys the application into Kubernetes</p>
+
+            <p>
+                Helm renders the application templates and creates
+                the Kubernetes resources required to run the application.
+            </p>
 
             <div class="subflow">
 
                 <div class="subflow-title">
-                    Common deployment inputs / resources
+                    Common Kubernetes resources
                 </div>
 
-                <div class="resource">
-                    <strong>Helm Chart</strong>
-                </div>
+
+                <!-- NAMESPACE -->
 
                 <div class="resource">
-                    <strong>values.yaml</strong>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Environment-specific configuration
+
+                    <div class="resource-name">
+                        Namespace
                     </div>
-                </div>
 
-                <div class="resource">
-                    <strong>Docker Image</strong>
-                    <div class="nested">
-                        <span class="small-arrow">↳</span>
-                        Image repository / tag
+                    <div class="resource-description">
+                        Provides a logical boundary for organizing
+                        application resources inside the cluster.
                     </div>
+
                 </div>
 
-                <div class="resource">
-                    <strong>Namespace</strong>
-                </div>
+
+                <!-- DEPLOYMENT -->
 
                 <div class="resource">
-                    <strong>Deployment</strong>
+
+                    <div class="resource-name">
+                        Deployment
+                    </div>
+
+                    <div class="resource-description">
+                        Defines the desired number of application Pods
+                        and manages application rollout and replacement.
+                    </div>
+
                 </div>
 
-                <div class="resource">
-                    <strong>Service</strong>
-                </div>
+
+                <!-- SERVICE -->
 
                 <div class="resource">
-                    <strong>ConfigMap</strong>
-                    <span> — if required</span>
+
+                    <div class="resource-name">
+                        Service
+                    </div>
+
+                    <div class="resource-description">
+                        Provides a stable network endpoint and routes
+                        traffic to the application's Pods.
+                    </div>
+
                 </div>
 
-                <div class="resource">
-                    <strong>Secret / Secret Reference</strong>
-                    <span> — if required</span>
-                </div>
+
+                <!-- CONFIGMAP -->
 
                 <div class="resource">
-                    <strong>ServiceAccount</strong>
-                    <span> — if required</span>
+
+                    <div class="resource-name">
+                        ConfigMap
+                    </div>
+
+                    <div class="resource-description">
+                        Stores non-sensitive application configuration
+                        separately from the container image.
+                    </div>
+
                 </div>
 
-                <div class="resource">
-                    <strong>Ingress / Gateway</strong>
-                    <span> — if required</span>
-                </div>
+
+                <!-- SECRET -->
 
                 <div class="resource">
-                    <strong>HPA</strong>
-                    <span> — if required</span>
+
+                    <div class="resource-name">
+                        Secret / Secret Reference
+                    </div>
+
+                    <div class="resource-description">
+                        Provides sensitive configuration or references
+                        to an external secret-management system.
+                    </div>
+
                 </div>
 
+
+                <!-- SERVICE ACCOUNT -->
+
                 <div class="resource">
-                    <strong>PVC</strong>
-                    <span> — if required</span>
+
+                    <div class="resource-name">
+                        ServiceAccount
+                    </div>
+
+                    <div class="resource-description">
+                        Provides an identity for the Kubernetes workload
+                        and can be associated with permissions when required.
+                    </div>
+
+                </div>
+
+
+                <!-- INGRESS -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        Ingress / Gateway
+                    </div>
+
+                    <div class="resource-description">
+                        Provides an entry point for external HTTP/HTTPS
+                        traffic when external access is required.
+                    </div>
+
+                </div>
+
+
+                <!-- HPA -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        HPA
+                    </div>
+
+                    <div class="resource-description">
+                        Automatically adjusts the number of application
+                        Pods based on configured metrics such as CPU utilization.
+                    </div>
+
+                </div>
+
+
+                <!-- PVC -->
+
+                <div class="resource">
+
+                    <div class="resource-name">
+                        PVC
+                    </div>
+
+                    <div class="resource-description">
+                        Requests persistent storage when the application
+                        needs data to survive Pod replacement.
+                    </div>
+
                 </div>
 
             </div>
+
         </div>
+
 
         <div class="arrow">↓</div>
 
 
-        <!-- 9. KUBERNETES -->
-        <div class="box" onclick="openSection('kubernetes')">
+        <!-- =================================================
+             7. KUBERNETES WORKLOAD
+             ================================================= -->
+
+        <div class="main-box" onclick="openSection('kubernetes')">
+
             <h2>7. Kubernetes Workload</h2>
-            <p>Deployment creates and manages the application Pods</p>
+
+            <p>
+                Kubernetes creates and manages the application workload.
+            </p>
 
             <div class="subflow">
 
                 <div class="resource">
-                    <strong>Deployment</strong>
+
+                    <div class="resource-name">
+                        Deployment
+                    </div>
+
+                    <div class="resource-description">
+                        Defines the desired application state.
+                    </div>
+
                 </div>
 
                 <div class="arrow">↓</div>
 
                 <div class="resource">
-                    <strong>ReplicaSet</strong>
+
+                    <div class="resource-name">
+                        ReplicaSet
+                    </div>
+
+                    <div class="resource-description">
+                        Maintains the required number of Pods.
+                    </div>
+
                 </div>
 
                 <div class="arrow">↓</div>
 
                 <div class="resource">
-                    <strong>Pod</strong>
+
+                    <div class="resource-name">
+                        Pod
+                    </div>
+
+                    <div class="resource-description">
+                        The Kubernetes execution unit that contains
+                        one or more application containers.
+                    </div>
+
                 </div>
 
                 <div class="arrow">↓</div>
 
                 <div class="resource">
-                    <strong>Container</strong>
+
+                    <div class="resource-name">
+                        Container
+                    </div>
+
+                    <div class="resource-description">
+                        Runs the application process from the container image.
+                    </div>
+
                 </div>
 
                 <div class="arrow">↓</div>
 
                 <div class="resource">
-                    <strong>Docker Image</strong>
+
+                    <div class="resource-name">
+                        Docker Image
+                    </div>
+
+                    <div class="resource-description">
+                        Contains the application code and required
+                        runtime dependencies.
+                    </div>
+
                 </div>
 
             </div>
+
         </div>
+
 
         <div class="arrow">↓</div>
 
 
-        <!-- 10. FINAL -->
-        <div class="box">
+        <!-- =================================================
+             FINAL
+             ================================================= -->
+
+        <div class="main-box">
+
             <h2>8. Microservice Running</h2>
-            <p>Application is running as a workload on the Kubernetes cluster</p>
+
+            <p>
+                The application is running as a Kubernetes workload
+                and is available through its configured service or endpoint.
+            </p>
+
         </div>
 
     </div>
 
 
     <!-- =========================================================
-         EXPLANATIONS
-         These are explanations of the SAME workflow above.
+         DETAILED EXPLANATIONS
          ========================================================= -->
 
 
+    <!-- =================================================
+         PORTAL
+         ================================================= -->
+
     <details id="portal">
-        <summary>1. Internal Portal — What happens here?</summary>
+
+        <summary>
+            1. Internal Portal — Details
+        </summary>
 
         <div class="details-content">
 
             <p>
-                The internal portal provides the application onboarding
-                information needed to start the workflow.
+                The Internal Portal is the entry point where the
+                application and deployment information is collected.
             </p>
 
+            <h3>Typical inputs</h3>
+
             <ul>
-                <li>Application / microservice name</li>
-                <li>Application version</li>
-                <li>Artifact or Docker image information</li>
-                <li>Target environment</li>
-                <li>Build / deployment information</li>
-                <li>Security or scanner information when required</li>
+
+                <li>
+                    Application / microservice name
+                </li>
+
+                <li>
+                    Application version
+                </li>
+
+                <li>
+                    Docker image or artifact
+                </li>
+
+                <li>
+                    Target environment
+                </li>
+
+                <li>
+                    Deployment configuration
+                </li>
+
+                <li>
+                    Security/scanning information when required
+                </li>
+
             </ul>
 
-            <div class="note">
-                The important interview point:
-                <strong>the portal is the entry point for the application request.</strong>
-            </div>
-
         </div>
+
     </details>
 
+
+    <!-- =================================================
+         BACKSTAGE
+         ================================================= -->
 
     <details id="backstage">
-        <summary>2. Backstage Workflow API — How is it triggered?</summary>
+
+        <summary>
+            2. Backstage Workflow API — Details
+        </summary>
 
         <div class="details-content">
 
             <p>
-                The Internal Portal calls a Backstage workflow/API after
-                the required application information is submitted.
-            </p>
-
-            <p>
-                Backstage then orchestrates the next steps of the provisioning
-                workflow.
+                The Internal Portal sends the application information
+                to a Backstage API or workflow.
             </p>
 
             <div class="note">
-                Simple interview explanation:
+
                 <strong>
-                    Internal Portal → Backstage API / Workflow → Provisioning
+                    Internal Portal → Backstage API / Workflow
                 </strong>
+
+                <br><br>
+
+                Backstage then orchestrates the automation needed
+                for the next provisioning steps.
             </div>
 
+            <p>
+                Depending on the templates and automation configured,
+                the workflow can create project/configuration information
+                and initiate environment provisioning.
+            </p>
+
         </div>
+
     </details>
 
+
+    <!-- =================================================
+         EKS
+         ================================================= -->
 
     <details id="eks">
-        <summary>3. EKS Cluster Provisioning — What gets provisioned?</summary>
+
+        <summary>
+            3. EKS Provisioning — Details
+        </summary>
 
         <div class="details-content">
 
             <p>
-                The goal is to create or prepare the AWS environment in which
-                Kubernetes workloads can run.
+                Amazon EKS provides a managed Kubernetes control plane.
+                The surrounding AWS resources provide networking,
+                security, identity, and compute for the cluster.
             </p>
 
-            <ul>
-                <li>VPC and networking</li>
-                <li>Public/private subnets</li>
-                <li>Route tables</li>
-                <li>Internet Gateway / NAT Gateway where required</li>
-                <li>Security Groups</li>
-                <li>IAM roles and policies</li>
-                <li>KMS / encryption where enabled</li>
-                <li>EKS control plane</li>
-                <li>Managed node groups / EC2 worker nodes</li>
-                <li>EKS add-ons</li>
-            </ul>
+            <h3>High-level provisioning sequence</h3>
 
-            <div class="note">
-                These are common AWS/EKS components. The exact resources
-                depend on how the environment is designed.
+<pre><code>VPC
+  ↓
+Subnets
+  ↓
+Routing
+  ↓
+Security Groups
+  ↓
+IAM
+  ↓
+EKS
+  ↓
+Node Groups
+  ↓
+EKS Add-ons
+  ↓
+Cluster Ready</code></pre>
+
+            <div class="important">
+
+                <strong>Important:</strong>
+
+                The exact infrastructure depends on the environment.
+                For example, an existing VPC and subnets may be reused
+                instead of being created as part of the EKS provisioning.
+
             </div>
 
         </div>
+
     </details>
 
+
+    <!-- =================================================
+         RAFAY
+         ================================================= -->
 
     <details id="rafay">
-        <summary>4. Rafay Environment Template — What does it do?</summary>
+
+        <summary>
+            4. Rafay — Details
+        </summary>
 
         <div class="details-content">
 
             <p>
-                Once the Kubernetes environment is available, the environment
-                workflow can be launched through Rafay.
+                Rafay can be used to organize and automate application
+                environments and their associated resources.
             </p>
 
-            <ul>
-                <li>Rafay Project provides the organizational boundary.</li>
-                <li>Environment Template defines the environment workflow.</li>
-                <li>Resource Templates define individual provisioning resources.</li>
-                <li>Rafay Agent can execute the environment workflow.</li>
-            </ul>
+            <h3>Flow</h3>
 
-            <p>
-                The Environment Template coordinates the resources required
-                for the application environment.
-            </p>
-
-        </div>
-    </details>
-
-
-    <details id="resources">
-        <summary>5. Resource Templates — What resources are provisioned?</summary>
-
-        <div class="details-content">
-
-            <p>
-                Resource Templates can execute infrastructure-as-code or
-                configuration needed by the application environment.
-            </p>
-
-            <p>
-                A common implementation uses Terraform or OpenTofu.
-            </p>
-
-            <ul>
-                <li>S3 / application storage</li>
-                <li>IAM roles and policies</li>
-                <li>Secrets / Vault integration</li>
-                <li>Security and access configuration</li>
-                <li>Other AWS resources required by the application</li>
-                <li>Environment-specific configuration</li>
-            </ul>
+<pre><code>Rafay Project
+      ↓
+Environment Template
+      ↓
+Launch Environment
+      ↓
+Rafay Agent
+      ↓
+Resource Templates
+      ↓
+Resource Execution
+      ↓
+Outputs / Logs</code></pre>
 
             <div class="note">
-                Important:
-                <strong>
-                    Kubernetes does not universally require all of these.
-                </strong>
-                They are common application/environment prerequisites.
+
+                Resource Templates can reference infrastructure-as-code,
+                configuration, scripts, or other automation required
+                for the environment.
+
             </div>
 
-            <p>
-                During execution, the platform can provide resource status,
-                input/output values, and execution logs.
-            </p>
-
         </div>
+
     </details>
 
+
+    <!-- =================================================
+         RESOURCES
+         ================================================= -->
+
+    <details id="resources">
+
+        <summary>
+            5. Resource Templates — Details
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Resource Templates are used to provision supporting
+                infrastructure or configuration required by the
+                application environment.
+            </p>
+
+            <h3>Terraform / OpenTofu</h3>
+
+            <p>
+                Terraform or OpenTofu can describe infrastructure as code.
+                The Resource Template can execute that automation and
+                expose the resulting status, outputs, and logs.
+            </p>
+
+
+            <!-- =============================================
+                 S3
+                 ============================================= -->
+
+            <h3>S3 — Example</h3>
+
+<pre><code># Create S3 storage for my-app.
+#
+# S3 can be used for application files, data,
+# reports, artifacts, or other object storage needs.
+
+resource "aws_s3_bucket" "my_app" {
+
+  bucket = "my-app-application-data"
+
+  tags = {
+
+    Name = "my-app-application-data"
+
+    Application = "my-app"
+  }
+}</code></pre>
+
+
+            <!-- =============================================
+                 IAM
+                 ============================================= -->
+
+            <h3>IAM Role — Example</h3>
+
+<pre><code># Create an IAM role for my-app.
+#
+# The trust policy determines which AWS identity/service
+# is allowed to assume this role.
+#
+# The actual trust relationship depends on the workload
+# architecture.
+
+resource "aws_iam_role" "my_app" {
+
+  name = "my-app-role"
+
+  assume_role_policy = jsonencode({
+
+    Version = "2012-10-17"
+
+    Statement = [
+
+      {
+
+        Effect = "Allow"
+
+        Principal = {
+
+          Service = "eks.amazonaws.com"
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = {
+
+    Application = "my-app"
+  }
+}</code></pre>
+
+
+            <!-- =============================================
+                 IAM POLICY
+                 ============================================= -->
+
+            <h3>IAM Policy — Example</h3>
+
+<pre><code># Example policy allowing my-app to read
+# objects from its S3 bucket.
+#
+# In production, permissions should follow
+# least-privilege principles.
+
+resource "aws_iam_policy" "my_app_s3" {
+
+  name = "my-app-s3-access"
+
+  policy = jsonencode({
+
+    Version = "2012-10-17"
+
+    Statement = [
+
+      {
+
+        Effect = "Allow"
+
+        Action = [
+
+          "s3:GetObject",
+
+          "s3:ListBucket"
+        ]
+
+        Resource = [
+
+          aws_s3_bucket.my_app.arn,
+
+          "${aws_s3_bucket.my_app.arn}/*"
+        ]
+      }
+    ]
+  })
+}</code></pre>
+
+
+            <!-- =============================================
+                 KMS
+                 ============================================= -->
+
+            <h3>KMS — Example</h3>
+
+<pre><code># Example KMS key for application encryption.
+#
+# KMS can be used when application or infrastructure
+# data needs encryption using a customer-managed key.
+
+resource "aws_kms_key" "my_app" {
+
+  description = "KMS key for my-app"
+
+  enable_key_rotation = true
+
+  tags = {
+
+    Name = "my-app-kms"
+
+    Application = "my-app"
+  }
+}</code></pre>
+
+
+            <!-- =============================================
+                 OUTPUTS
+                 ============================================= -->
+
+            <h3>Terraform Outputs</h3>
+
+<pre><code># Outputs make useful resource information available
+# to later automation steps.
+
+output "my_app_bucket" {
+
+  description = "S3 bucket for my-app"
+
+  value = aws_s3_bucket.my_app.bucket
+}
+
+output "my_app_role" {
+
+  description = "IAM role for my-app"
+
+  value = aws_iam_role.my_app.arn
+}</code></pre>
+
+
+            <!-- =============================================
+                 TERRAFORM EXECUTION
+                 ============================================= -->
+
+            <h3>Basic Terraform Execution</h3>
+
+<pre><code># Initialize Terraform providers/modules.
+
+terraform init
+
+# Review the infrastructure changes.
+
+terraform plan
+
+# Create or update the resources.
+
+terraform apply</code></pre>
+
+
+            <div class="note">
+
+                <strong>
+                    Resource Template execution:
+                </strong>
+
+                The Terraform/OpenTofu execution can produce
+                resource status, input values, output values,
+                and execution logs.
+
+            </div>
+
+
+            <!-- =============================================
+                 VAULT
+                 ============================================= -->
+
+            <h3>Vault Integration</h3>
+
+            <p>
+                Vault or another secrets-management system can provide
+                application secrets securely at deployment or runtime.
+            </p>
+
+            <div class="important">
+
+                Avoid putting passwords, tokens, or private keys directly
+                into Git repositories, Terraform source, or Helm values.
+                The exact secret-injection mechanism depends on the
+                environment.
+
+            </div>
+
+
+            <!-- =============================================
+                 RSA / SSH
+                 ============================================= -->
+
+            <h3>RSA / SSH</h3>
+
+            <p>
+                RSA/SSH configuration may be required when an application
+                or supporting process needs secure key-based authentication.
+            </p>
+
+            <div class="important">
+
+                RSA/SSH is an application/environment-specific prerequisite;
+                it is not required by every Kubernetes application.
+
+            </div>
+
+
+            <!-- =============================================
+                 OTHER
+                 ============================================= -->
+
+            <h3>Other Application Prerequisites</h3>
+
+            <p>
+                Additional resources can be added depending on what the
+                application requires.
+            </p>
+
+            <ul>
+
+                <li>
+                    AWS storage
+                </li>
+
+                <li>
+                    IAM permissions
+                </li>
+
+                <li>
+                    Secrets
+                </li>
+
+                <li>
+                    Security configuration
+                </li>
+
+                <li>
+                    Application-specific AWS services
+                </li>
+
+                <li>
+                    Environment configuration
+                </li>
+
+            </ul>
+
+        </div>
+
+    </details>
+
+
+    <!-- =================================================
+         HELM
+         ================================================= -->
 
     <details id="helm">
-        <summary>6. Helm — What is needed to deploy an application?</summary>
+
+        <summary>
+            6. Helm Application Deployment — Details
+        </summary>
 
         <div class="details-content">
 
             <p>
-                Helm packages Kubernetes application resources into a
-                reusable chart.
+                Helm packages Kubernetes resources into a reusable chart.
+                The chart uses values to create the Kubernetes objects
+                required by the application.
             </p>
 
-            <p>Common deployment inputs include:</p>
 
-            <ul>
-                <li>Helm chart</li>
-                <li><code>values.yaml</code></li>
-                <li>Environment-specific values</li>
-                <li>Docker image repository</li>
-                <li>Docker image tag/version</li>
-                <li>Namespace</li>
-            </ul>
+            <h3>Basic Helm Structure</h3>
 
-            <p>
-                The Helm chart can create the Kubernetes resources required
-                by the application.
-            </p>
-
-            <p>Common resources include:</p>
-
-            <ul>
-                <li>Deployment</li>
-                <li>Service</li>
-                <li>ConfigMap — when required</li>
-                <li>Secret / Secret reference — when required</li>
-                <li>ServiceAccount — when required</li>
-                <li>Ingress / Gateway — when required</li>
-                <li>HPA — when required</li>
-                <li>PVC — when required</li>
-            </ul>
-
-        </div>
-    </details>
+<pre><code>my-app/
+│
+├── Chart.yaml
+│
+├── values.yaml
+│
+└── templates/
+    │
+    ├── namespace.yaml
+    ├── deployment.yaml
+    ├── service.yaml
+    ├── configmap.yaml
+    ├── secret.yaml
+    ├── serviceaccount.yaml
+    ├── ingress.yaml
+    ├── hpa.yaml
+    └── pvc.yaml</code></pre>
 
 
-    <details id="kubernetes">
-        <summary>7. Kubernetes Workload — What happens after Helm?</summary>
+            <!-- =============================================
+                 CHART YAML
+                 ============================================= -->
 
-        <div class="details-content">
+            <h3>Chart.yaml</h3>
 
-            <p>
-                Helm applies the Kubernetes manifests/templates.
-                Kubernetes then creates and manages the workload.
-            </p>
+<pre><code># Defines the Helm chart.
 
-            <p>The basic relationship to remember is:</p>
+apiVersion: v2
 
-            <div class="subflow">
+name: my-app
 
-                <div class="resource">
-                    <strong>Deployment</strong>
-                </div>
+description: Helm chart for my-app
 
-                <div class="arrow">↓</div>
+type: application
 
-                <div class="resource">
-                    <strong>ReplicaSet</strong>
-                </div>
+version: 1.0.0
 
-                <div class="arrow">↓</div>
+appVersion: "1.0.0"</code></pre>
 
-                <div class="resource">
-                    <strong>Pod</strong>
-                </div>
 
-                <div class="arrow">↓</div>
+            <!-- =============================================
+                 VALUES YAML
+                 ============================================= -->
 
-                <div class="resource">
-                    <strong>Container</strong>
-                </div>
+            <h3>values.yaml</h3>
 
-                <div class="arrow">↓</div>
+<pre><code># ==========================================================
+# values.yaml
+#
+# This file contains values used by the Helm templates.
+#
+# The same chart can be reused across environments by
+# changing values instead of changing the Kubernetes templates.
+# ==========================================================
 
-                <div class="resource">
-                    <strong>Docker Image</strong>
-                </div>
+
+# ----------------------------------------------------------
+# Application name
+# ----------------------------------------------------------
+
+name: my-app
+
+
+# ----------------------------------------------------------
+# Namespace
+#
+# Keeps application resources logically separated.
+# ----------------------------------------------------------
+
+namespace: my-app
+
+
+# ----------------------------------------------------------
+# Docker image
+#
+# repository = location of the image
+# tag        = version of the application
+# ----------------------------------------------------------
+
+image:
+
+  repository: "my-app"
+
+  tag: "1.0.0"
+
+  pullPolicy: IfNotPresent
+
+
+# ----------------------------------------------------------
+# Number of Pods
+# ----------------------------------------------------------
+
+replicaCount: 2
+
+
+# ----------------------------------------------------------
+# Kubernetes Service
+#
+# The Service gives the application a stable network endpoint.
+# ----------------------------------------------------------
+
+service:
+
+  type: ClusterIP
+
+  port: 8080
+
+  targetPort: 8080
+
+
+# ----------------------------------------------------------
+# Application configuration
+#
+# These are non-sensitive values.
+# Sensitive values should come from a secret-management
+# mechanism instead of being stored here.
+# ----------------------------------------------------------
+
+config:
+
+  environment: "dev"
+
+  logLevel: "INFO"
+
+
+# ----------------------------------------------------------
+# Container resource requests and limits
+#
+# requests = resources Kubernetes should reserve
+# limits   = maximum resources the container can consume
+# ----------------------------------------------------------
+
+resources:
+
+  requests:
+
+    cpu: "250m"
+
+    memory: "256Mi"
+
+
+  limits:
+
+    cpu: "500m"
+
+    memory: "512Mi"
+
+
+# ----------------------------------------------------------
+# Health check
+#
+# Kubernetes uses these endpoints to determine application
+# health and readiness.
+# ----------------------------------------------------------
+
+health:
+
+  path: "/health"
+
+  port: 8080
+
+
+# ----------------------------------------------------------
+# Autoscaling
+# ----------------------------------------------------------
+
+autoscaling:
+
+  enabled: true
+
+  minReplicas: 2
+
+  maxReplicas: 5
+
+  targetCPUUtilization: 70</code></pre>
+
+
+            <!-- =============================================
+                 NAMESPACE
+                 ============================================= -->
+
+            <h3>templates/namespace.yaml</h3>
+
+<pre><code>{{/*
+Creates the Kubernetes namespace for my-app.
+
+A namespace provides logical separation for Kubernetes resources.
+
+Some environments create namespaces separately, so this template
+may not be needed if the namespace already exists.
+*/}}
+
+apiVersion: v1
+
+kind: Namespace
+
+metadata:
+
+  name: {{ .Values.namespace }}</code></pre>
+
+
+            <!-- =============================================
+                 DEPLOYMENT
+                 ============================================= -->
+
+            <h3>templates/deployment.yaml</h3>
+
+<pre><code>{{/*
+==============================================================
+Deployment
+==============================================================
+
+The Deployment is the main Kubernetes workload definition.
+
+It tells Kubernetes:
+
+1. How many Pods should run.
+2. Which Docker image should run.
+3. Which container port is used.
+4. Which configuration should be provided.
+5. CPU and memory requirements.
+6. How to check application health.
+
+Deployment
+    ↓
+ReplicaSet
+    ↓
+Pods
+    ↓
+Containers
+    ↓
+Docker Image
+==============================================================
+*/}}
+
+
+apiVersion: apps/v1
+
+kind: Deployment
+
+
+metadata:
+
+  # Helm release name makes the resource name unique.
+
+  name: {{ .Release.Name }}-my-app
+
+  namespace: {{ .Values.namespace }}
+
+
+  labels:
+
+    app: my-app
+
+
+spec:
+
+  # ----------------------------------------------------------
+  # Number of desired Pods.
+  #
+  # If replicaCount = 2, Kubernetes tries to keep
+  # two healthy Pods running.
+  # ----------------------------------------------------------
+
+  replicas: {{ .Values.replicaCount }}
+
+
+  # ----------------------------------------------------------
+  # Selector tells the Deployment which Pods it manages.
+  # It must match the labels in the Pod template.
+  # ----------------------------------------------------------
+
+  selector:
+
+    matchLabels:
+
+      app: my-app
+
+
+  template:
+
+    metadata:
+
+      labels:
+
+        app: my-app
+
+
+    spec:
+
+      containers:
+
+        - name: my-app
+
+
+          # --------------------------------------------------
+          # Docker image
+          #
+          # Example:
+          # my-app:1.0.0
+          #
+          # In a real environment this can point to ECR
+          # or another container registry.
+          # --------------------------------------------------
+
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
+
+          # Controls when Kubernetes pulls the image.
+
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+
+          # --------------------------------------------------
+          # Container port
+          # --------------------------------------------------
+
+          ports:
+
+            - name: http
+
+              containerPort: {{ .Values.service.targetPort }}
+
+              protocol: TCP
+
+
+          # --------------------------------------------------
+          # Environment variables
+          #
+          # These values come from values.yaml.
+          # --------------------------------------------------
+
+          env:
+
+            - name: APP_ENV
+
+              value: "{{ .Values.config.environment }}"
+
+
+            - name: LOG_LEVEL
+
+              value: "{{ .Values.config.logLevel }}"
+
+
+          # --------------------------------------------------
+          # Resource requests and limits
+          #
+          # requests tell Kubernetes the minimum resources
+          # the application should have available.
+          #
+          # limits prevent the container from exceeding
+          # the configured maximum.
+          # --------------------------------------------------
+
+          resources:
+
+            {{- toYaml .Values.resources | nindent 12 }}
+
+
+          # --------------------------------------------------
+          # Readiness Probe
+          #
+          # Determines whether the application is ready
+          # to receive traffic.
+          #
+          # If the application is not ready, Kubernetes
+          # does not send Service traffic to that Pod.
+          # --------------------------------------------------
+
+          readinessProbe:
+
+            httpGet:
+
+              path: {{ .Values.health.path }}
+
+              port: {{ .Values.health.port }}
+
+            initialDelaySeconds: 10
+
+            periodSeconds: 10
+
+            timeoutSeconds: 5
+
+            failureThreshold: 3
+
+
+          # --------------------------------------------------
+          # Liveness Probe
+          #
+          # Determines whether the application is still alive.
+          #
+          # If the application repeatedly fails the liveness
+          # check, Kubernetes can restart the container.
+          # --------------------------------------------------
+
+          livenessProbe:
+
+            httpGet:
+
+              path: {{ .Values.health.path }}
+
+              port: {{ .Values.health.port }}
+
+            initialDelaySeconds: 30
+
+            periodSeconds: 20
+
+            timeoutSeconds: 5
+
+            failureThreshold: 3</code></pre>
+
+
+            <!-- =============================================
+                 SERVICE
+                 ============================================= -->
+
+            <h3>templates/service.yaml</h3>
+
+<pre><code>{{/*
+==============================================================
+Service
+==============================================================
+
+Pods are temporary.
+
+A Pod can be recreated and receive a different IP address.
+
+The Service provides a stable network endpoint and sends
+traffic to Pods matching the "app: my-app" label.
+
+Traffic flow:
+
+Client
+  ↓
+Service
+  ↓
+my-app Pods
+==============================================================
+*/}}
+
+
+apiVersion: v1
+
+kind: Service
+
+
+metadata:
+
+  name: {{ .Release.Name }}-my-app
+
+  namespace: {{ .Values.namespace }}
+
+
+spec:
+
+  type: {{ .Values.service.type }}
+
+
+  # ----------------------------------------------------------
+  # Find Pods using this label.
+  # ----------------------------------------------------------
+
+  selector:
+
+    app: my-app
+
+
+  ports:
+
+    - name: http
+
+      port: {{ .Values.service.port }}
+
+      targetPort: {{ .Values.service.targetPort }}
+
+      protocol: TCP</code></pre>
+
+
+            <!-- =============================================
+                 CONFIGMAP
+                 ============================================= -->
+
+            <h3>templates/configmap.yaml</h3>
+
+<pre><code>{{/*
+==============================================================
+ConfigMap
+
+Stores non-sensitive configuration.
+
+Examples:
+
+APP_ENV
+LOG_LEVEL
+Application URLs
+Feature flags
+
+Do NOT put passwords or tokens in a ConfigMap.
+==============================================================
+*/}}
+
+
+apiVersion: v1
+
+kind: ConfigMap
+
+
+metadata:
+
+  name: {{ .Release.Name }}-my-app-config
+
+  namespace: {{ .Values.namespace }}
+
+
+data:
+
+  APP_ENV: "{{ .Values.config.environment }}"
+
+  LOG_LEVEL: "{{ .Values.config.logLevel }}"</code></pre>
+
+
+            <!-- =============================================
+                 SECRET
+                 ============================================= -->
+
+            <h3>templates/secret.yaml</h3>
+
+<pre><code>{{/*
+==============================================================
+Secret
+
+Kubernetes Secret can store sensitive configuration.
+
+For production environments, secrets are often retrieved
+from an external secrets-management system such as Vault.
+
+The example below demonstrates the Kubernetes resource
+structure only.
+
+Do not commit real passwords, tokens, or private keys to Git.
+==============================================================
+*/}}
+
+
+apiVersion: v1
+
+kind: Secret
+
+
+metadata:
+
+  name: {{ .Release.Name }}-my-app-secret
+
+  namespace: {{ .Values.namespace }}
+
+
+type: Opaque
+
+
+stringData:
+
+  example-key: "replace-with-secret-reference"</code></pre>
+
+
+            <!-- =============================================
+                 SERVICE ACCOUNT
+                 ============================================= -->
+
+            <h3>templates/serviceaccount.yaml</h3>
+
+<pre><code>{{/*
+==============================================================
+ServiceAccount
+
+Provides an identity for the Kubernetes workload.
+
+It can be associated with permissions when the application
+needs to access Kubernetes or AWS resources.
+
+The exact AWS integration depends on the EKS identity
+configuration.
+==============================================================
+*/}}
+
+
+apiVersion: v1
+
+kind: ServiceAccount
+
+
+metadata:
+
+  name: {{ .Release.Name }}-my-app
+
+  namespace: {{ .Values.namespace }}
+
+
+  labels:
+
+    app: my-app</code></pre>
+
+
+            <!-- =============================================
+                 INGRESS
+                 ============================================= -->
+
+            <h3>templates/ingress.yaml</h3>
+
+<pre><code>{{/*
+==============================================================
+Ingress
+
+Ingress provides an HTTP/HTTPS entry point to the application.
+
+Typical traffic:
+
+Internet / Client
+      ↓
+Load Balancer / Ingress
+      ↓
+Service
+      ↓
+Pods
+
+The exact annotations depend on the ingress controller
+or gateway implementation used by the Kubernetes platform.
+==============================================================
+*/}}
+
+
+apiVersion: networking.k8s.io/v1
+
+kind: Ingress
+
+
+metadata:
+
+  name: {{ .Release.Name }}-my-app
+
+  namespace: {{ .Values.namespace }}
+
+
+spec:
+
+  rules:
+
+    - host: my-app.example.com
+
+      http:
+
+        paths:
+
+          - path: /
+
+            pathType: Prefix
+
+            backend:
+
+              service:
+
+                name: {{ .Release.Name }}-my-app
+
+                port:
+
+                  number: {{ .Values.service.port }}</code></pre>
+
+
+            <!-- =============================================
+                 HPA
+                 ============================================= -->
+
+            <h3>templates/hpa.yaml</h3>
+
+<pre><code>{{/*
+==============================================================
+Horizontal Pod Autoscaler
+
+HPA adjusts the number of Pods based on metrics.
+
+Example:
+
+CPU increases
+     ↓
+HPA detects higher utilization
+     ↓
+More Pods
+     ↓
+More application capacity
+
+This resource is optional.
+==============================================================
+*/}}
+
+
+{{- if .Values.autoscaling.enabled }}
+
+apiVersion: autoscaling/v2
+
+kind: HorizontalPodAutoscaler
+
+
+metadata:
+
+  name: {{ .Release.Name }}-my-app
+
+  namespace: {{ .Values.namespace }}
+
+
+spec:
+
+  scaleTargetRef:
+
+    apiVersion: apps/v1
+
+    kind: Deployment
+
+    name: {{ .Release.Name }}-my-app
+
+
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+
+
+  metrics:
+
+    - type: Resource
+
+      resource:
+
+        name: cpu
+
+        target:
+
+          type: Utilization
+
+          averageUtilization: {{ .Values.autoscaling.targetCPUUtilization }}
+
+{{- end }}</code></pre>
+
+
+            <!-- =============================================
+                 PVC
+                 ============================================= -->
+
+            <h3>templates/pvc.yaml — Optional</h3>
+
+<pre><code>{{/*
+==============================================================
+PersistentVolumeClaim
+
+PVC requests persistent storage for an application.
+
+Use it when application data must survive Pod replacement.
+
+For example:
+
+Pod deleted
+   ↓
+New Pod created
+   ↓
+Same persistent storage can be mounted
+
+PVC is optional. Stateless applications may not need it.
+==============================================================
+*/}}
+
+
+apiVersion: v1
+
+kind: PersistentVolumeClaim
+
+
+metadata:
+
+  name: {{ .Release.Name }}-my-app-data
+
+  namespace: {{ .Values.namespace }}
+
+
+spec:
+
+  accessModes:
+
+    - ReadWriteOnce
+
+
+  resources:
+
+    requests:
+
+      storage: 10Gi</code></pre>
+
+
+            <!-- =============================================
+                 HELM COMMANDS
+                 ============================================= -->
+
+            <h3>Basic Helm Deployment</h3>
+
+<pre><code># Validate/render the chart before deployment.
+#
+# This helps identify template or values problems.
+
+helm template my-app ./my-app \
+  --namespace my-app
+
+
+# Install the application for the first time.
+
+helm install my-app ./my-app \
+  --namespace my-app \
+  --create-namespace
+
+
+# Upgrade the application when a new version is deployed.
+
+helm upgrade my-app ./my-app \
+  --namespace my-app
+
+
+# Check the Helm release.
+
+helm list \
+  --namespace my-app
+
+
+# Check application Pods.
+
+kubectl get pods \
+  --namespace my-app
+
+
+# Check the Deployment.
+
+kubectl get deployment \
+  --namespace my-app
+
+
+# Check the Service.
+
+kubectl get service \
+  --namespace my-app
+
+
+# View application logs.
+
+kubectl logs \
+  deployment/my-app-my-app \
+  --namespace my-app</code></pre>
+
+
+            <div class="note">
+
+                <strong>
+                    Basic Helm relationship:
+                </strong>
+
+                <br><br>
+
+                Helm Chart
+                → values.yaml
+                → Kubernetes Templates
+                → Kubernetes Resources
+                → Deployment
+                → Pods
+                → Containers
+                → Docker Image
 
             </div>
 
-            <p>
-                The Deployment maintains the desired number of Pods.
-                The Pod runs the container, and the container runs the
-                application image.
-            </p>
+        </div>
+
+    </details>
+
+
+    <!-- =================================================
+         KUBERNETES
+         ================================================= -->
+
+    <details id="kubernetes">
+
+        <summary>
+            7. Kubernetes Workload — Details
+        </summary>
+
+        <div class="details-content">
+
+            <h3>Application workload relationship</h3>
+
+<pre><code>Deployment
+     ↓
+ReplicaSet
+     ↓
+Pod
+     ↓
+Container
+     ↓
+Docker Image</code></pre>
+
+
+            <h3>Traffic relationship</h3>
+
+<pre><code>Client
+   ↓
+Ingress / Gateway
+   ↓
+Service
+   ↓
+Pod
+   ↓
+Container
+   ↓
+Application</code></pre>
+
+
+            <h3>Configuration relationship</h3>
+
+<pre><code>ConfigMap
+      ↓
+Application Configuration
+
+Secret / Vault
+      ↓
+Sensitive Configuration
+      ↓
+Application Container</code></pre>
+
+
+            <h3>Scaling relationship</h3>
+
+<pre><code>Application Load
+      ↓
+HPA
+      ↓
+Deployment
+      ↓
+More / Fewer Pods</code></pre>
+
+
+            <div class="note">
+
+                The exact resources used depend on the application.
+                A simple stateless application may only need a
+                Deployment and Service, while another application
+                may also require ConfigMap, Secret, Ingress, HPA,
+                persistent storage, or other resources.
+
+            </div>
 
         </div>
+
     </details>
+
+
+    <!-- =========================================================
+         HIGH LEVEL - HOW EVERYTHING WORKS TOGETHER
+         ========================================================= -->
+
+    <div class="final-flow">
+
+        <h2>
+            How Everything Works Together
+        </h2>
+
+
+        <div class="final-step">
+
+            <strong>1. Application Request</strong>
+
+            <br>
+
+            Application information is entered in the
+            Internal Portal.
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <div class="final-step">
+
+            <strong>2. Workflow Trigger</strong>
+
+            <br>
+
+            The Internal Portal calls the Backstage
+            workflow/API.
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <div class="final-step">
+
+            <strong>3. Platform Provisioning</strong>
+
+            <br>
+
+            The workflow provisions or prepares the AWS
+            infrastructure and EKS Kubernetes cluster.
+
+            <br><br>
+
+            VPC → Subnets → Routing → IAM → Security →
+            EKS → Node Groups → Add-ons
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <div class="final-step">
+
+            <strong>4. Kubernetes Environment Ready</strong>
+
+            <br>
+
+            The EKS cluster is available to run
+            Kubernetes workloads.
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <div class="final-step">
+
+            <strong>5. Environment Resources</strong>
+
+            <br>
+
+            Rafay launches the environment and executes
+            the required Resource Templates.
+
+            <br><br>
+
+            Resource Templates can execute Terraform/OpenTofu
+            to provision supporting application resources such
+            as S3, IAM, Vault integration, RSA/SSH configuration,
+            and other prerequisites.
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <div class="final-step">
+
+            <strong>6. Application Environment Ready</strong>
+
+            <br>
+
+            The infrastructure and supporting resources needed
+            by the application are available.
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <div class="final-step">
+
+            <strong>7. Application Deployment</strong>
+
+            <br>
+
+            Helm uses the chart, values, and Docker image
+            information to create the Kubernetes resources.
+
+            <br><br>
+
+            Namespace → Deployment → Service →
+            ConfigMap / Secret / ServiceAccount →
+            Ingress / Gateway / HPA when required
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <div class="final-step">
+
+            <strong>8. Kubernetes Creates the Workload</strong>
+
+            <br>
+
+            Deployment creates/manages ReplicaSets,
+            which maintain the required Pods.
+
+            <br><br>
+
+            Deployment → ReplicaSet → Pod → Container → Docker Image
+
+        </div>
+
+
+        <div class="arrow">↓</div>
+
+
+        <div class="final-step">
+
+            <strong>9. Application Running</strong>
+
+            <br>
+
+            The microservice is running inside the Kubernetes
+            cluster and can receive traffic through its
+            configured Service and external routing mechanism.
+
+        </div>
+
+    </div>
 
 
 </div>
 
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
 
 <script>
 
@@ -826,15 +2919,20 @@ function openSection(id) {
         return;
     }
 
+    // Open the detailed explanation.
     section.open = true;
 
+    // Scroll to the selected explanation.
     section.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
+
 }
 
 </script>
 
+
 </body>
+
 </html>
