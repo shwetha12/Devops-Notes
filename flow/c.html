@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<!--
+============================================================
+DEVOPS INTERVIEW CHEAT SHEET
+Workflow:
+Internal Portal → Backstage → EKS → Rafay → Terraform/OpenTofu
+→ Application Prerequisites → Helm → Kubernetes → Microservice
+
+This is a SINGLE HTML file.
+No external libraries are required.
+Open this file directly in Chrome/Edge.
+============================================================
+-->
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DevOps - EKS + Rafay + Terraform + Helm Workflow</title>
+
+<style>
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+    color: #222;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1250px;
+    margin: auto;
+    padding: 25px;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #666;
+    margin-top: 0;
+}
+
+
+/* ============================================================
+   QUICK MEMORY BOX
+   ============================================================ */
+
+.memory {
+    background: white;
+    border-left: 5px solid #333;
+    padding: 18px;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+
+/* ============================================================
+   MAIN WORKFLOW
+   ============================================================ */
+
+.workflow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 30px 0;
+}
+
+.workflow-box {
+    width: 80%;
+    max-width: 750px;
+    padding: 18px;
+    border-radius: 10px;
+    text-align: center;
+    background: white;
+    border: 2px solid #555;
+    cursor: pointer;
+
+    /* Makes clicking feel interactive */
+    transition: transform 0.15s ease;
+}
+
+.workflow-box:hover {
+    transform: scale(1.02);
+}
+
+.workflow-box h2 {
+    margin: 0;
+}
+
+.workflow-box p {
+    margin: 5px 0 0;
+    color: #666;
+}
+
+.arrow {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+/* ============================================================
+   EXPANDABLE DETAILS
+   ============================================================ */
+
+details {
+    background: white;
+    margin: 15px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+}
+
+summary {
+    cursor: pointer;
+    padding: 16px 20px;
+    font-size: 19px;
+    font-weight: bold;
+    background: #fafafa;
+}
+
+details[open] summary {
+    border-bottom: 1px solid #ddd;
+}
+
+.detail-content {
+    padding: 20px;
+}
+
+
+/* ============================================================
+   CODE BLOCKS
+   ============================================================ */
+
+pre {
+    background: #1e1e1e;
+    color: #eee;
+    padding: 15px;
+    border-radius: 7px;
+    overflow-x: auto;
+}
+
+code {
+    font-family: Consolas, Monaco, monospace;
+}
+
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background: white;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background: #f0f0f0;
+}
+
+
+/* ============================================================
+   INTERVIEW BOX
+   ============================================================ */
+
+.interview {
+    border-left: 5px solid #555;
+    background: #f7f7f7;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.warning {
+    border-left: 5px solid #888;
+    background: #fafafa;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 16px;
+    margin: 5px;
+    border: 1px solid #555;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #eee;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h1>DevOps Interview Cheat Sheet</h1>
+
+<p class="subtitle">
+Internal Portal → Backstage → EKS → Rafay → Terraform/OpenTofu → Helm → Kubernetes
+</p>
+
+
+<!-- ==========================================================
+     30 SECOND MEMORY
+     ========================================================== -->
+
+<div class="memory">
+
+<h2>30-Second Memory</h2>
+
+<p>
+
+<strong>Backstage</strong> is used as the developer/platform workflow entry point.
+
+<br><br>
+
+The onboarding workflow can provision or configure the
+<strong>AWS EKS environment</strong>.
+
+<br><br>
+
+Once the EKS cluster exists,
+<strong>Rafay</strong> can manage application environments through
+Environment Templates and Resource Templates.
+
+<br><br>
+
+Resource Templates can use
+<strong>Terraform/OpenTofu</strong> to create supporting infrastructure
+and application prerequisites.
+
+<br><br>
+
+Finally,
+<strong>Helm</strong> deploys the application into Kubernetes.
+
+</p>
+
+<pre>
+Internal Portal
+      ↓
+Backstage
+      ↓
+EKS Cluster
+      ↓
+Rafay Project
+      ↓
+Environment Template
+      ↓
+Rafay Agent
+      ↓
+Resource Templates
+      ↓
+Terraform / OpenTofu
+      ↓
+Application Prerequisites
+      ↓
+Helm
+      ↓
+Kubernetes Workload
+      ↓
+Microservice Running
+</pre>
+
+</div>
+
+
+<!-- ==========================================================
+     MAIN VISUAL WORKFLOW
+     ========================================================== -->
+
+<h2>End-to-End Visual Workflow</h2>
+
+<div class="workflow">
+
+    <div class="workflow-box"
+         onclick="openSection('portal')">
+
+        <h2>1. Internal Portal</h2>
+
+        <p>
+        Microservice onboarding / deployment inputs
+        </p>
+
+    </div>
+
+    <div class="arrow">↓</div>
+
+
+    <div class="workflow-box"
+         onclick="openSection('backstage')">
+
+        <h2>2. Backstage</h2>
+
+        <p>
+        Workflow / API orchestration
+        </p>
+
+    </div>
+
+    <div class="arrow">↓</div>
+
+
+    <div class="workflow-box"
+         onclick="openSection('eks')">
+
+        <h2>3. AWS EKS Provisioning</h2>
+
+        <p>
+        Kubernetes cluster and supporting AWS infrastructure
+        </p>
+
+    </div>
+
+    <div class="arrow">↓</div>
+
+
+    <div class="workflow-box"
+         onclick="openSection('rafay')">
+
+        <h2>4. Rafay Environment</h2>
+
+        <p>
+        Project → Environment Template → Agent
+        </p>
+
+    </div>
+
+    <div class="arrow">↓</div>
+
+
+    <div class="workflow-box"
+         onclick="openSection('resources')">
+
+        <h2>5. Resource Templates</h2>
+
+        <p>
+        Terraform / OpenTofu → supporting resources
+        </p>
+
+    </div>
+
+    <div class="arrow">↓</div>
+
+
+    <div class="workflow-box"
+         onclick="openSection('helm')">
+
+        <h2>6. Helm Deployment</h2>
+
+        <p>
+        Kubernetes application deployment
+        </p>
+
+    </div>
+
+    <div class="arrow">↓</div>
+
+
+    <div class="workflow-box">
+
+        <h2>7. Microservice Running</h2>
+
+        <p>
+        Pods → Containers → Docker Image
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================================
+     SECTION 1 - INTERNAL PORTAL
+     ========================================================== -->
+
+<details id="portal">
+
+<summary>
+1. Internal Portal — Application Onboarding
+</summary>
+
+<div class="detail-content">
+
+<h3>What happens?</h3>
+
+<p>
+The developer/application team provides the information required
+to onboard a microservice.
+</p>
+
+<h3>Typical inputs</h3>
+
+<ul>
+<li>Application / microservice name</li>
+<li>Repository information</li>
+<li>Docker image information</li>
+<li>Build/application version</li>
+<li>Target environment</li>
+<li>Artifact information</li>
+<li>Security/scanner information when required</li>
+</ul>
+
+<h3>Conceptual flow</h3>
+
+<pre>
+Developer
+   ↓
+Internal Portal
+   ↓
+Save Application Configuration
+   ↓
+Backstage API / Workflow
+</pre>
+
+<div class="interview">
+
+<strong>Interview wording:</strong>
+
+<p>
+"Our internal portal was used as the onboarding entry point.
+Application teams provided the required microservice and deployment
+information, and the portal triggered the Backstage workflow through
+an API."
+</p>
+
+</div>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     SECTION 2 - BACKSTAGE
+     ========================================================== -->
+
+<details id="backstage">
+
+<summary>
+2. Backstage — Workflow / Orchestration
+</summary>
+
+<div class="detail-content">
+
+<h3>Purpose</h3>
+
+<p>
+Backstage acts as the workflow/orchestration layer.
+It can automate project setup, repository configuration,
+templates, and infrastructure/environment workflows.
+</p>
+
+<pre>
+Internal Portal
+       ↓
+Backstage API
+       ↓
+Backstage Workflow
+       ↓
+Project / Repository / Configuration
+       ↓
+Environment / Cluster Provisioning
+</pre>
+
+<h3>What can the workflow perform?</h3>
+
+<ul>
+<li>Create project/repository structure</li>
+<li>Generate YAML/configuration</li>
+<li>Apply application templates</li>
+<li>Create or configure Rafay project information</li>
+<li>Trigger cluster/environment provisioning</li>
+</ul>
+
+<div class="warning">
+
+<strong>Important interview distinction:</strong>
+
+<p>
+Do not say that you personally administered Backstage or EKS if the
+Platform team owned those functions.
+</p>
+
+<p>
+A safer statement is:
+"I worked with the Backstage-driven workflow and used the resulting
+environment for application deployment."
+</p>
+
+</div>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     SECTION 3 - EKS
+     ========================================================== -->
+
+<details id="eks">
+
+<summary>
+3. AWS EKS — Cluster Provisioning
+</summary>
+
+<div class="detail-content">
+
+<h3>What is EKS?</h3>
+
+<p>
+Amazon EKS is AWS's managed Kubernetes service.
+The resulting EKS cluster is a Kubernetes cluster running on AWS.
+</p>
+
+<h3>Typical infrastructure involved</h3>
+
+<table>
+
+<tr>
+<th>Area</th>
+<th>Typical Resources</th>
+</tr>
+
+<tr>
+<td>Networking</td>
+<td>VPC, subnets, route tables</td>
+</tr>
+
+<tr>
+<td>Internet connectivity</td>
+<td>Internet Gateway, NAT Gateway</td>
+</tr>
+
+<tr>
+<td>Security</td>
+<td>Security Groups</td>
+</tr>
+
+<tr>
+<td>Identity</td>
+<td>IAM roles and policies</td>
+</tr>
+
+<tr>
+<td>Encryption</td>
+<td>KMS</td>
+</tr>
+
+<tr>
+<td>Kubernetes</td>
+<td>EKS control plane</td>
+</tr>
+
+<tr>
+<td>Compute</td>
+<td>Managed node groups / EC2 worker nodes</td>
+</tr>
+
+<tr>
+<td>Add-ons</td>
+<td>VPC CNI, CoreDNS, kube-proxy, EBS CSI, etc.</td>
+</tr>
+
+</table>
+
+<h3>Conceptual architecture</h3>
+
+<pre>
+AWS
+│
+├── VPC
+│
+├── Public / Private Subnets
+│
+├── Route Tables
+│
+├── NAT / Internet Gateway
+│
+├── Security Groups
+│
+├── IAM
+│
+├── KMS
+│
+└── EKS
+     │
+     ├── Control Plane
+     │
+     └── Node Groups
+           │
+           └── EC2 Worker Nodes
+</pre>
+
+<div class="warning">
+
+<strong>Important:</strong>
+
+<p>
+The exact resources created by an enterprise EKS workflow depend on
+the organization's templates and whether networking/infrastructure
+already exists.
+</p>
+
+<p>
+Do not claim that every EKS deployment creates all of these resources.
+</p>
+
+</div>
+
+<h3>Useful Kubernetes commands</h3>
+
+<pre>
+kubectl get nodes
+
+kubectl get namespaces
+
+kubectl get pods -A
+
+kubectl get deployments -A
+
+kubectl get services -A
+</pre>
+
+<div class="interview">
+
+<strong>Interview wording:</strong>
+
+<p>
+"At the platform level, the Backstage workflow was used to provision
+the EKS environment. My focus was primarily on the application
+delivery and deployment workflows running against that environment."
+</p>
+
+</div>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     SECTION 4 - RAFAY
+     ========================================================== -->
+
+<details id="rafay">
+
+<summary>
+4. Rafay — Project → Environment Template → Agent
+</summary>
+
+<div class="detail-content">
+
+<h3>Important concept</h3>
+
+<p>
+At this stage, the EKS cluster already exists.
+Rafay is then used to manage the application environment and
+supporting resources.
+</p>
+
+<pre>
+EKS Cluster Already Exists
+          ↓
+     Rafay Project
+          ↓
+ Environment Template
+          ↓
+    Launch Environment
+          ↓
+      Rafay Agent
+          ↓
+   Resource Templates
+</pre>
+
+<h3>Rafay Project</h3>
+
+<p>
+A logical boundary used to organize resources, environments,
+applications, and related configuration.
+</p>
+
+<h3>Environment Template</h3>
+
+<p>
+An Environment Template defines the components required to create
+an application environment.
+</p>
+
+<h3>Agent</h3>
+
+<p>
+The Rafay agent participates in executing environment activities
+against the target environment.
+</p>
+
+<div class="interview">
+
+<strong>Interview wording:</strong>
+
+<p>
+"After the EKS cluster was available, we used Rafay to launch the
+application environment. The Environment Template referenced the
+required Resource Templates, which were executed through the Rafay
+workflow."
+</p>
+
+</div>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     SECTION 5 - RESOURCE TEMPLATES
+     ========================================================== -->
+
+<details id="resources">
+
+<summary>
+5. Rafay Resource Templates → Terraform / OpenTofu
+</summary>
+
+<div class="detail-content">
+
+<h3>What is a Resource Template?</h3>
+
+<p>
+Think of a Resource Template as a reusable infrastructure building
+block used by an environment.
+</p>
+
+<pre>
+Environment Template
+        ↓
+Resource Template
+        ↓
+Terraform / OpenTofu
+        ↓
+AWS / External Resource
+</pre>
+
+<h3>Typical application prerequisites</h3>
+
+<table>
+
+<tr>
+<th>Resource</th>
+<th>Possible Purpose</th>
+</tr>
+
+<tr>
+<td>S3</td>
+<td>Application storage / artifacts / configuration</td>
+</tr>
+
+<tr>
+<td>IAM Role</td>
+<td>Application permissions</td>
+</tr>
+
+<tr>
+<td>IAM Policy</td>
+<td>Fine-grained permissions</td>
+</tr>
+
+<tr>
+<td>Vault Integration</td>
+<td>Secret management</td>
+</tr>
+
+<tr>
+<td>RSA / SSH Configuration</td>
+<td>Authentication / secure access</td>
+</tr>
+
+<tr>
+<td>Other prerequisites</td>
+<td>Resources required by the application</td>
+</tr>
+
+</table>
+
+<h3>Example Terraform concept</h3>
+
+<pre>
+# Example only.
+# Actual enterprise code may be stored in Git and referenced
+# by the Rafay Resource Template.
+
+resource "aws_s3_bucket" "application_bucket" {
+
+  bucket = "my-application-example"
+
+  tags = {
+    Application = "my-application"
+    Environment = "dev"
+  }
+}
+</pre>
+
+<h3>Execution UI</h3>
+
+<p>
+During Resource Template execution, the UI can show information such
+as:
+</p>
+
+<ul>
+<li>Execution status</li>
+<li>Input values</li>
+<li>Output values</li>
+<li>Execution logs</li>
+<li>Resource status</li>
+<li>Errors when execution fails</li>
+</ul>
+
+<div class="warning">
+
+<strong>Important distinction:</strong>
+
+<p>
+The execution screen showing logs and input/output values does not
+necessarily mean the complete Terraform source code is displayed
+there. The IaC source is generally associated with the Resource
+Template / Git repository.
+</p>
+
+</div>
+
+<div class="interview">
+
+<strong>Interview wording:</strong>
+
+<p>
+"The Rafay Environment Template referenced reusable Resource Templates.
+Those Resource Templates used infrastructure-as-code such as Terraform
+or OpenTofu to provision application prerequisites. I monitored the
+execution status, inputs, outputs, and logs and coordinated with the
+platform team for platform-level issues."
+</p>
+
+</div>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     SECTION 6 - HELM
+     ========================================================== -->
+
+<details id="helm">
+
+<summary>
+6. Helm → Kubernetes Application Deployment
+</summary>
+
+<div class="detail-content">
+
+<h3>What is Helm?</h3>
+
+<p>
+Helm is a package manager and templating mechanism commonly used to
+deploy Kubernetes applications.
+</p>
+
+<h3>Basic deployment flow</h3>
+
+<pre>
+Helm
+  ↓
+Namespace
+  ↓
+Deployment
+  ↓
+ReplicaSet
+  ↓
+Pod
+  ↓
+Container
+  ↓
+Docker Image
+</pre>
+
+<h3>Other Kubernetes objects commonly involved</h3>
+
+<ul>
+<li>Service</li>
+<li>ConfigMap</li>
+<li>Secret / Secret reference</li>
+<li>ServiceAccount</li>
+<li>Ingress</li>
+<li>VirtualService / Gateway</li>
+<li>HPA</li>
+<li>NetworkPolicy</li>
+<li>PVC / PV when persistent storage is required</li>
+</ul>
+
+<h3>Example Helm commands</h3>
+
+<pre>
+helm list -A
+
+helm status my-application -n my-namespace
+
+helm upgrade --install my-application ./chart \
+  --namespace my-namespace \
+  --create-namespace
+</pre>
+
+<div class="warning">
+
+<strong>Note:</strong>
+
+<p>
+The exact Kubernetes objects created by Helm depend on the chart.
+Not every application needs HPA, Ingress, NetworkPolicy, PVC, etc.
+</p>
+
+</div>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     KUBERNETES SECTION
+     ========================================================== -->
+
+<details>
+
+<summary>
+7. Kubernetes — What Actually Runs
+</summary>
+
+<div class="detail-content">
+
+<h3>Deployment → ReplicaSet → Pod → Container</h3>
+
+<pre>
+Deployment
+     ↓
+ReplicaSet
+     ↓
+Pod
+     ↓
+Container
+     ↓
+Docker Image
+</pre>
+
+<h3>Deployment</h3>
+
+<p>
+Defines the desired state of the application and manages ReplicaSets.
+</p>
+
+<h3>ReplicaSet</h3>
+
+<p>
+Maintains the requested number of Pod replicas.
+</p>
+
+<h3>Pod</h3>
+
+<p>
+The smallest deployable Kubernetes unit. A Pod contains one or more
+containers.
+</p>
+
+<h3>Container</h3>
+
+<p>
+Runs the application process from the container image.
+</p>
+
+<h3>Service</h3>
+
+<p>
+Provides a stable network endpoint for accessing Pods.
+</p>
+
+<h3>ConfigMap</h3>
+
+<p>
+Stores non-sensitive configuration.
+</p>
+
+<h3>Secret</h3>
+
+<p>
+Stores sensitive configuration or references to sensitive data.
+</p>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     COMPLETE WORKFLOW
+     ========================================================== -->
+
+<details>
+
+<summary>
+8. Complete Enterprise Workflow — Interview View
+</summary>
+
+<div class="detail-content">
+
+<pre>
+APPLICATION ONBOARDING
+======================
+
+Developer
+   │
+   ▼
+Internal Portal
+   │
+   │ Application / Microservice Information
+   ▼
+Backstage
+   │
+   │ Workflow / API
+   ▼
+EKS Provisioning
+   │
+   ├── VPC
+   ├── Subnets
+   ├── Routing
+   ├── IAM
+   ├── Security Groups
+   ├── KMS
+   ├── EKS
+   └── Node Groups
+   │
+   ▼
+EKS CLUSTER READY
+   │
+   ▼
+RAFAY
+   │
+   ├── Project
+   │
+   ├── Environment Template
+   │
+   └── Rafay Agent
+   │
+   ▼
+RESOURCE TEMPLATES
+   │
+   ├── Terraform / OpenTofu
+   │      └── S3
+   │
+   ├── Terraform / OpenTofu
+   │      └── IAM
+   │
+   ├── Terraform / OpenTofu
+   │      └── Vault Integration
+   │
+   ├── Terraform / OpenTofu
+   │      └── RSA / SSH
+   │
+   └── Other Application Prerequisites
+   │
+   ▼
+APPLICATION ENVIRONMENT READY
+   │
+   ▼
+HELM
+   │
+   ├── Namespace
+   ├── Deployment
+   ├── Service
+   ├── ConfigMap
+   ├── Secret
+   ├── Ingress / Gateway
+   └── HPA
+   │
+   ▼
+KUBERNETES
+   │
+   └── Deployment
+          ↓
+       ReplicaSet
+          ↓
+         Pod
+          ↓
+      Container
+          ↓
+      Docker Image
+          ↓
+     MICROSERVICE
+</pre>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     INTERVIEW QUESTIONS
+     ========================================================== -->
+
+<details>
+
+<summary>
+9. Common Interview Questions & Answers
+</summary>
+
+<div class="detail-content">
+
+<h3>Q: What is the difference between Kubernetes and EKS?</h3>
+
+<p>
+<strong>Answer:</strong>
+Kubernetes is the container orchestration platform.
+EKS is AWS's managed Kubernetes service.
+</p>
+
+
+<h3>Q: Does Rafay create the EKS cluster?</h3>
+
+<p>
+<strong>Answer:</strong>
+It depends on the organization's workflow. In the workflow being
+described here, the EKS cluster is provisioned first, and Rafay is
+then used for application environment provisioning.
+</p>
+
+
+<h3>Q: What does a Rafay Resource Template do?</h3>
+
+<p>
+<strong>Answer:</strong>
+It provides a reusable resource/infrastructure building block that
+can be executed as part of an Environment Template. It can use
+infrastructure-as-code such as Terraform or OpenTofu.
+</p>
+
+
+<h3>Q: What does Helm do?</h3>
+
+<p>
+<strong>Answer:</strong>
+Helm packages and templates Kubernetes application resources and
+helps deploy or upgrade those resources consistently.
+</p>
+
+
+<h3>Q: Where does Terraform fit?</h3>
+
+<p>
+<strong>Answer:</strong>
+Terraform or OpenTofu can be used by Resource Templates to provision
+supporting infrastructure and application prerequisites.
+</p>
+
+
+<h3>Q: What happens after the prerequisites are ready?</h3>
+
+<p>
+<strong>Answer:</strong>
+The application deployment workflow uses Helm to create or update
+the required Kubernetes resources, resulting in Pods running the
+application container.
+</p>
+
+
+<h3>Q: What did you personally own?</h3>
+
+<div class="interview">
+
+<p>
+"I worked primarily on the application delivery and CI/CD side.
+The platform team handled platform-level AWS and Kubernetes
+administration. I worked with the workflows that deployed
+applications into the EKS/Kubernetes environment and coordinated
+with the platform team when platform-level issues occurred."
+</p>
+
+</div>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     COMMAND CHEAT SHEET
+     ========================================================== -->
+
+<details>
+
+<summary>
+10. Quick Commands
+</summary>
+
+<div class="detail-content">
+
+<h3>Kubernetes</h3>
+
+<pre>
+kubectl get nodes
+
+kubectl get pods -A
+
+kubectl get pods -n my-namespace
+
+kubectl get deployments -n my-namespace
+
+kubectl get svc -n my-namespace
+
+kubectl describe pod my-pod -n my-namespace
+
+kubectl logs my-pod -n my-namespace
+
+kubectl get events -n my-namespace
+</pre>
+
+<h3>Helm</h3>
+
+<pre>
+helm list -A
+
+helm status my-application -n my-namespace
+
+helm history my-application -n my-namespace
+
+helm upgrade --install my-application ./chart \
+  --namespace my-namespace \
+  --create-namespace
+
+helm rollback my-application 1 \
+  --namespace my-namespace
+</pre>
+
+<h3>AWS EKS</h3>
+
+<pre>
+aws eks list-clusters
+
+aws eks describe-cluster \
+  --name my-eks-cluster
+
+aws eks update-kubeconfig \
+  --region us-east-1 \
+  --name my-eks-cluster
+</pre>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     TYPICAL VS COMPANY SPECIFIC
+     ========================================================== -->
+
+<details>
+
+<summary>
+11. Typical Industry Flow vs Company-Specific Flow
+</summary>
+
+<div class="detail-content">
+
+<table>
+
+<tr>
+<th>Topic</th>
+<th>How to describe it</th>
+</tr>
+
+<tr>
+<td>Backstage</td>
+<td>Workflow/orchestration layer</td>
+</tr>
+
+<tr>
+<td>EKS</td>
+<td>AWS managed Kubernetes environment</td>
+</tr>
+
+<tr>
+<td>Rafay Project</td>
+<td>Logical organization boundary</td>
+</tr>
+
+<tr>
+<td>Environment Template</td>
+<td>Collection/orchestration of environment components</td>
+</tr>
+
+<tr>
+<td>Resource Template</td>
+<td>Reusable infrastructure/resource building block</td>
+</tr>
+
+<tr>
+<td>Terraform/OpenTofu</td>
+<td>Infrastructure-as-code implementation</td>
+</tr>
+
+<tr>
+<td>S3/IAM/Vault/etc.</td>
+<td>Application prerequisites; exact resources depend on architecture</td>
+</tr>
+
+<tr>
+<td>Helm</td>
+<td>Kubernetes application deployment/package management</td>
+</tr>
+
+</table>
+
+<div class="warning">
+
+<strong>Interview rule:</strong>
+
+<p>
+Separate what you actually saw and worked with from what is a
+typical industry architecture.
+</p>
+
+<p>
+For example, say:
+"Typical EKS environments may include VPC, subnets, IAM,
+security groups and node groups."
+</p>
+
+<p>
+Do not say:
+"Our Backstage workflow definitely creates all of these,"
+unless you have verified it.
+</p>
+
+</div>
+
+</div>
+</details>
+
+
+<!-- ==========================================================
+     JAVASCRIPT
+     ========================================================== -->
+
+<script>
+
+/*
+============================================================
+CLICK BEHAVIOR
+============================================================
+
+When a workflow box is clicked, this function:
+
+1. Finds the corresponding <details> section.
+2. Opens it.
+3. Scrolls the browser to that section.
+
+This gives the page a clickable workflow-diagram experience.
+============================================================
+*/
+
+function openSection(sectionId) {
+
+    const section = document.getElementById(sectionId);
+
+    if (!section) {
+        return;
+    }
+
+    section.open = true;
+
+    section.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+</script>
+
+</div>
+
+</body>
+</html>
