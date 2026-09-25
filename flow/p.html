@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DevOps - What Happens When an Application URL Is Hit?</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f7fb;
+        color: #1e293b;
+        line-height: 1.65;
+    }
+
+    header {
+        background: linear-gradient(135deg, #0f172a, #1e3a8a);
+        color: white;
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 36px;
+    }
+
+    header p {
+        margin: 8px 0 0;
+        color: #dbeafe;
+        font-size: 18px;
+    }
+
+    .container {
+        width: 92%;
+        max-width: 1200px;
+        margin: 35px auto 60px;
+    }
+
+    .intro {
+        background: white;
+        border: 1px solid #dbe3ef;
+        border-radius: 14px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.06);
+    }
+
+    .intro h2 {
+        color: #1e3a8a;
+        margin-top: 0;
+    }
+
+    .flow {
+        background: white;
+        border: 1px solid #dbe3ef;
+        border-radius: 14px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.06);
+    }
+
+    .flow-title {
+        color: #1e3a8a;
+        font-size: 23px;
+        margin-top: 0;
+    }
+
+    .flow-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .box {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 14px 17px;
+        text-align: center;
+        min-width: 130px;
+        font-weight: bold;
+    }
+
+    .arrow {
+        font-size: 25px;
+        color: #64748b;
+    }
+
+    .step {
+        background: white;
+        border: 1px solid #dbe3ef;
+        border-radius: 12px;
+        margin-bottom: 18px;
+        overflow: hidden;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    .step-header {
+        background: #f8fafc;
+        padding: 17px 21px;
+        color: #1e3a8a;
+        font-size: 19px;
+        font-weight: bold;
+    }
+
+    .step-body {
+        padding: 20px 24px;
+    }
+
+    .step-body ul {
+        padding-left: 22px;
+    }
+
+    .step-body li {
+        margin-bottom: 9px;
+    }
+
+    .connection {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 14px 18px;
+        margin: 18px 0;
+        border-radius: 6px;
+    }
+
+    .connection strong {
+        color: #1e3a8a;
+    }
+
+    .resource {
+        border: 1px solid #dbe3ef;
+        border-radius: 9px;
+        padding: 15px 18px;
+        margin: 12px 0;
+        background: #ffffff;
+    }
+
+    .resource h4 {
+        margin: 0 0 6px;
+        color: #1d4ed8;
+    }
+
+    .resource p {
+        margin: 4px 0;
+    }
+
+    pre {
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 18px;
+        border-radius: 9px;
+        overflow-x: auto;
+        font-size: 13px;
+        line-height: 1.55;
+    }
+
+    code {
+        font-family: Consolas, Monaco, monospace;
+    }
+
+    .highlight {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 18px;
+        margin: 18px 0;
+    }
+
+    .highlight h3 {
+        color: #1e3a8a;
+        margin-top: 0;
+    }
+
+    .data-flow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 25px 0;
+    }
+
+    .data-box {
+        width: 80%;
+        max-width: 650px;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .data-arrow {
+        font-size: 25px;
+        color: #64748b;
+        margin: 5px;
+    }
+
+    .notes {
+        margin-top: 20px;
+        padding: 15px 18px;
+        background: #f8fafc;
+        border-left: 4px solid #3b82f6;
+        border-radius: 7px;
+    }
+
+    .notes strong {
+        color: #1e3a8a;
+    }
+
+    footer {
+        text-align: center;
+        padding: 25px;
+        color: #64748b;
+    }
+
+    @media (max-width: 750px) {
+        .flow-row {
+            flex-direction: column;
+        }
+
+        .arrow {
+            transform: rotate(90deg);
+        }
+
+        .data-box {
+            width: 95%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>DevOps</h1>
+    <p>What Happens When an Application URL Is Hit?</p>
+</header>
+
+<div class="container">
+
+    <!-- ====================================================== -->
+    <!-- INTRODUCTION                                           -->
+    <!-- ====================================================== -->
+
+    <div class="intro">
+
+        <h2>Understanding the Complete Request Flow</h2>
+
+        <p>
+            Suppose a user opens the following URL:
+        </p>
+
+        <pre><code>https://my-app.example.com/orders/123</code></pre>
+
+        <p>
+            The browser does not directly know which Pod should handle
+            the request. The request travels through several layers.
+            Each layer performs a specific function before the request
+            finally reaches the application container.
+        </p>
+
+        <p>
+            The application may then retrieve data from a database,
+            cache, another service, object storage, or another backend
+            system and return the response through the same networking path.
+        </p>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- COMPLETE REQUEST FLOW                                  -->
+    <!-- ====================================================== -->
+
+    <div class="flow">
+
+        <h2 class="flow-title">Complete Request Flow</h2>
+
+        <div class="flow-row">
+
+            <div class="box">
+                User
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                DNS
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Load Balancer
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Ingress / Gateway
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Service
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Pod
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Container
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Application
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STEP 1                                                   -->
+    <!-- ====================================================== -->
+
+    <div class="step">
+
+        <div class="step-header">
+            Step 1 — User enters the application URL
+        </div>
+
+        <div class="step-body">
+
+            <p>
+                The user enters:
+            </p>
+
+            <pre><code>https://my-app.example.com/orders/123</code></pre>
+
+            <ul>
+                <li>The browser identifies the hostname: <code>my-app.example.com</code>.</li>
+                <li>The browser needs an IP address or network endpoint for that hostname.</li>
+                <li>DNS resolution is therefore performed.</li>
+                <li>The URL also contains the path <code>/orders/123</code>.</li>
+                <li>The HTTP method may be GET, POST, PUT, DELETE, etc., depending on the request.</li>
+            </ul>
+
+            <div class="connection">
+                <strong>The URL contains two useful pieces:</strong><br>
+                Hostname → identifies the application endpoint.<br>
+                Path → identifies the requested application resource or API operation.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STEP 2                                                   -->
+    <!-- ====================================================== -->
+
+    <div class="step">
+
+        <div class="step-header">
+            Step 2 — DNS finds the application endpoint
+        </div>
+
+        <div class="step-body">
+
+            <p>
+                DNS translates the application hostname into the endpoint
+                used to reach the application.
+            </p>
+
+            <pre><code>my-app.example.com
+        |
+        | DNS lookup
+        v
+Application Endpoint
+        |
+        v
+Load Balancer</code></pre>
+
+            <ul>
+                <li>The browser asks DNS for the address associated with the hostname.</li>
+                <li>The DNS response points the request toward the configured application endpoint.</li>
+                <li>In a cloud architecture, this can lead to a load balancer.</li>
+                <li>The browser then sends the HTTP/HTTPS request toward that endpoint.</li>
+            </ul>
+
+            <div class="notes">
+                <strong>Notes:</strong>
+                DNS does not send the request to a Pod. DNS only helps the
+                client locate the application endpoint.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STEP 3                                                   -->
+    <!-- ====================================================== -->
+
+    <div class="step">
+
+        <div class="step-header">
+            Step 3 — Traffic reaches the load balancer
+        </div>
+
+        <div class="step-body">
+
+            <p>
+                The load balancer receives the incoming network request
+                and forwards traffic toward the application routing layer.
+            </p>
+
+            <ul>
+                <li>The request arrives at the configured load-balancing endpoint.</li>
+                <li>Network routing determines where the request can travel.</li>
+                <li>Security groups control permitted network traffic.</li>
+                <li>The load balancer can terminate TLS/HTTPS depending on the architecture.</li>
+                <li>The load balancer forwards the request toward the Kubernetes ingress or gateway layer.</li>
+            </ul>
+
+            <div class="connection">
+                <strong>Why the AWS networking resources matter:</strong><br>
+                VPC → provides the network boundary.<br>
+                Subnets → provide network locations.<br>
+                Route tables → determine traffic paths.<br>
+                Security groups → control allowed traffic.<br>
+                Load balancer → provides an entry point and forwards traffic.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STEP 4                                                   -->
+    <!-- ====================================================== -->
+
+    <div class="step">
+
+        <div class="step-header">
+            Step 4 — Ingress or Gateway receives the request
+        </div>
+
+        <div class="step-body">
+
+            <p>
+                The Kubernetes ingress or gateway layer determines where
+                the request should go based on routing rules.
+            </p>
+
+            <p>
+                For example:
+            </p>
+
+            <pre><code>Host:
+my-app.example.com
+
+Path:
+/orders/123
+
+        |
+        v
+
+Route to:
+
+Service:
+my-app
+
+Port:
+8080</code></pre>
+
+            <ul>
+                <li>The hostname can be checked.</li>
+                <li>The URL path can be checked.</li>
+                <li>Different paths can be routed to different Services.</li>
+                <li>Different hostnames can be routed to different applications.</li>
+                <li>The request is forwarded to the appropriate Kubernetes Service.</li>
+            </ul>
+
+            <div class="notes">
+                <strong>Notes:</strong>
+                Ingress and Gateway are routing layers. The exact implementation
+                depends on the Kubernetes ingress controller or gateway used.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STEP 5                                                   -->
+    <!-- ====================================================== -->
+
+    <div class="step">
+
+        <div class="step-header">
+            Step 5 — Kubernetes Service finds the application Pods
+        </div>
+
+        <div class="step-body">
+
+            <p>
+                The Service provides a stable Kubernetes network endpoint.
+                It does not normally represent a single Pod.
+            </p>
+
+            <pre><code>Service: my-app
+
+selector:
+    app = my-app
+
+        |
+        +----------------+
+        |                |
+        v                v
+    Pod 1             Pod 2
+    my-app            my-app</code></pre>
+
+            <ul>
+                <li>The Service has a selector such as <code>app: my-app</code>.</li>
+                <li>Pods created by the Deployment have the same label.</li>
+                <li>Kubernetes uses the selector to identify the matching Pods.</li>
+                <li>The Service provides a stable endpoint even when individual Pods change.</li>
+                <li>Traffic can be distributed among available matching Pods.</li>
+            </ul>
+
+            <div class="connection">
+                <strong>Why the Deployment label matters:</strong><br>
+                The Deployment creates Pods with the label
+                <code>app: my-app</code>.
+                The Service uses that same label to find those Pods.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STEP 6                                                   -->
+    <!-- ====================================================== -->
+
+    <div class="step">
+
+        <div class="step-header">
+            Step 6 — Service sends traffic to a Pod
+        </div>
+
+        <div class="step-body">
+
+            <p>
+                Kubernetes networking sends the request from the Service
+                toward one of the matching application Pods.
+            </p>
+
+            <pre><code>Ingress
+   |
+   v
+Service: my-app
+   |
+   +------> Pod 1
+   |
+   +------> Pod 2
+   |
+   +------> Pod 3</code></pre>
+
+            <ul>
+                <li>The Service identifies healthy/available endpoints.</li>
+                <li>Traffic is directed toward an appropriate Pod.</li>
+                <li>The Pod has its own IP address, but the client normally uses the Service rather than the Pod IP directly.</li>
+                <li>Pods can be created, deleted, or replaced without changing the Service endpoint.</li>
+            </ul>
+
+            <div class="notes">
+                <strong>Notes:</strong>
+                This is one reason Kubernetes Services are useful: Pods are
+                dynamic, while the Service provides a stable abstraction
+                for reaching the workload.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STEP 7                                                   -->
+    <!-- ====================================================== -->
+
+    <div class="step">
+
+        <div class="step-header">
+            Step 7 — Pod sends the request to the application container
+        </div>
+
+        <div class="step-body">
+
+            <p>
+                A Pod contains one or more containers. In a simple microservice
+                deployment, the Pod may contain the main application container.
+            </p>
+
+            <pre><code>Pod
+ |
+ +-- Container
+       |
+       +-- Application Process
+       |
+       +-- Port 8080</code></pre>
+
+            <ul>
+                <li>The Pod receives the network traffic.</li>
+                <li>The container inside the Pod is listening on the configured application port.</li>
+                <li>The application process receives the HTTP request.</li>
+                <li>The application reads the URL path, HTTP method, headers, query parameters, and request body.</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STEP 8                                                   -->
+    <!-- ====================================================== -->
+
+    <div class="step">
+
+        <div class="step-header">
+            Step 8 — Application processes the request
+        </div>
+
+        <div class="step-body">
+
+            <p>
+                The application code now performs the business logic associated
+                with the request.
+            </p>
+
+            <p>
+                For example:
+            </p>
+
+            <pre><code>GET /orders/123
+
+Application receives request
+        |
+        v
+Read order ID = 123
+        |
+        v
+Validate request
+        |
+        v
+Call database / service
+        |
+        v
+Receive data
+        |
+        v
+Build response
+        |
+        v
+Return JSON</code></pre>
+
+            <ul>
+                <li>The application extracts the order ID from the URL.</li>
+                <li>The application validates authentication and authorization when configured.</li>
+                <li>The application performs its business logic.</li>
+                <li>The application may call a database.</li>
+                <li>The application may call another microservice.</li>
+                <li>The application may retrieve information from S3 or another AWS service.</li>
+                <li>The application creates the response.</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- GETTING DATA                                             -->
+    <!-- ====================================================== -->
+
+    <div class="flow">
+
+        <h2 class="flow-title">How Does the Application Get the Data?</h2>
+
+        <p>
+            Kubernetes does not normally contain the application's business
+            data. Kubernetes runs the application. The application itself
+            communicates with the required backend systems.
+        </p>
+
+        <div class="data-flow">
+
+            <div class="data-box">
+                User Request
+                <br>
+                <code>GET /orders/123</code>
+            </div>
+
+            <div class="data-arrow">↓</div>
+
+            <div class="data-box">
+                Application Container
+            </div>
+
+            <div class="data-arrow">↓</div>
+
+            <div class="data-box">
+                Application Code
+            </div>
+
+            <div class="data-arrow">↓</div>
+
+            <div class="data-box">
+                Database / Cache / API / AWS Service
+            </div>
+
+            <div class="data-arrow">↓</div>
+
+            <div class="data-box">
+                Data Returned to Application
+            </div>
+
+            <div class="data-arrow">↓</div>
+
+            <div class="data-box">
+                HTTP Response to User
+            </div>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>Database</h4>
+
+            <p>
+                The application can connect to a relational database,
+                NoSQL database, or another data store to retrieve or update data.
+            </p>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>Cache</h4>
+
+            <p>
+                A cache such as Redis can provide frequently accessed data
+                faster than repeatedly querying the primary database.
+            </p>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>Another Microservice</h4>
+
+            <p>
+                One microservice can call another service through its
+                Kubernetes Service or another API endpoint.
+            </p>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>S3</h4>
+
+            <p>
+                The application can use AWS SDKs and IAM permissions to
+                retrieve or store objects in S3.
+            </p>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>DynamoDB</h4>
+
+            <p>
+                An application can use AWS APIs to retrieve or update
+                records stored in DynamoDB.
+            </p>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>External API</h4>
+
+            <p>
+                The application can call an external service over HTTPS
+                when the architecture requires information from another system.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- IAM AND SECRETS                                          -->
+    <!-- ====================================================== -->
+
+    <div class="flow">
+
+        <h2 class="flow-title">How Does the Application Get Permission?</h2>
+
+        <p>
+            Applications often need permissions to access AWS resources
+            or other protected systems.
+        </p>
+
+        <pre><code>Application Pod
+      |
+      v
+Kubernetes ServiceAccount
+      |
+      v
+AWS IAM Role
+      |
+      v
+AWS Permissions
+      |
+      +---- S3
+      |
+      +---- DynamoDB
+      |
+      +---- Secrets / Other AWS Services</code></pre>
+
+        <ul>
+            <li>The application runs inside a Kubernetes Pod.</li>
+            <li>The Pod can use a Kubernetes ServiceAccount.</li>
+            <li>The ServiceAccount can be associated with an AWS IAM role through the configured AWS/Kubernetes identity mechanism.</li>
+            <li>The IAM role contains policies defining allowed AWS actions.</li>
+            <li>The application uses AWS SDKs or APIs to access permitted resources.</li>
+        </ul>
+
+        <div class="connection">
+            <strong>Example:</strong><br>
+            If the application needs to read an S3 object, the workload
+            requires an identity with permission such as
+            <code>s3:GetObject</code> for the required bucket/object.
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- HOW HELM CREATED THE RESOURCES                           -->
+    <!-- ====================================================== -->
+
+    <div class="flow">
+
+        <h2 class="flow-title">How the Helm Templates Help Create This Flow</h2>
+
+        <p>
+            Helm templates describe the Kubernetes resources that make
+            the application deployment possible.
+        </p>
+
+        <div class="resource">
+
+            <h4>deployment.yaml</h4>
+
+            <p>
+                Creates the Deployment and tells Kubernetes which container
+                image to run, how many replicas to maintain, which labels
+                to use, and which container port is used.
+            </p>
+
+<pre><code>Deployment
+    |
+    v
+ReplicaSet
+    |
+    v
+Pods
+    |
+    v
+Application Containers</code></pre>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>service.yaml</h4>
+
+            <p>
+                Creates the stable network endpoint used to send traffic
+                to the Pods.
+            </p>
+
+<pre><code>Service
+ |
+ | selector: app=my-app
+ |
+ +----> Pod 1
+ |
+ +----> Pod 2
+ |
+ +----> Pod 3</code></pre>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>ingress.yaml</h4>
+
+            <p>
+                Defines HTTP/HTTPS routing rules that can connect an
+                external hostname and path to a Kubernetes Service.
+            </p>
+
+<pre><code>my-app.example.com
+       |
+       v
+Ingress
+       |
+       v
+Service: my-app
+       |
+       v
+Pods</code></pre>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>configmap.yaml</h4>
+
+            <p>
+                Provides non-sensitive application configuration such as
+                environment names, URLs, feature flags, or log levels.
+            </p>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>secret.yaml</h4>
+
+            <p>
+                Provides sensitive configuration through Kubernetes Secrets
+                or can be integrated with an external secret-management system.
+            </p>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>serviceaccount.yaml</h4>
+
+            <p>
+                Gives the Kubernetes workload an identity that can be used
+                with configured authorization mechanisms.
+            </p>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>hpa.yaml</h4>
+
+            <p>
+                Allows Kubernetes to increase or decrease the number of
+                application replicas based on configured metrics.
+            </p>
+
+<pre><code>Low traffic
+    |
+    v
+2 Pods
+
+High traffic
+    |
+    v
+3 Pods
+    |
+    v
+4 Pods
+    |
+    v
+5 Pods</code></pre>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h4>pvc.yaml</h4>
+
+            <p>
+                Requests persistent storage when the application needs
+                storage that should survive Pod replacement.
+            </p>
+
+        </div>
+
+        <div class="notes">
+            <strong>Notes:</strong>
+            Helm does not create the application logic or database data.
+            Helm creates the Kubernetes resource definitions that establish
+            the environment in which the application runs and communicates.
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- RESPONSE FLOW                                            -->
+    <!-- ====================================================== -->
+
+    <div class="flow">
+
+        <h2 class="flow-title">How the Response Comes Back</h2>
+
+        <p>
+            After the application retrieves the required data and creates
+            a response, the response travels back through the networking
+            layers toward the user.
+        </p>
+
+        <div class="flow-row">
+
+            <div class="box">
+                Application
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Pod
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Service
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Ingress / Gateway
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                Load Balancer
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="box">
+                User
+            </div>
+
+        </div>
+
+        <pre><code>Application
+    |
+    | JSON / HTTP Response
+    v
+Pod
+    |
+    v
+Service / Network
+    |
+    v
+Ingress / Gateway
+    |
+    v
+Load Balancer
+    |
+    v
+Browser
+    |
+    v
+User sees the response</code></pre>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- COMPLETE EXAMPLE                                         -->
+    <!-- ====================================================== -->
+
+    <div class="flow">
+
+        <h2 class="flow-title">Complete Example: GET /orders/123</h2>
+
+        <div class="step-body">
+
+            <ul>
+
+                <li>
+                    <strong>1.</strong>
+                    The user opens
+                    <code>https://my-app.example.com/orders/123</code>.
+                </li>
+
+                <li>
+                    <strong>2.</strong>
+                    DNS resolves <code>my-app.example.com</code>
+                    to the configured application endpoint.
+                </li>
+
+                <li>
+                    <strong>3.</strong>
+                    The request reaches the configured load balancer.
+                </li>
+
+                <li>
+                    <strong>4.</strong>
+                    The load balancer forwards the request toward the
+                    Kubernetes ingress or gateway layer.
+                </li>
+
+                <li>
+                    <strong>5.</strong>
+                    The ingress/gateway checks the hostname and path and
+                    routes <code>/orders/123</code> to the
+                    <code>my-app</code> Service.
+                </li>
+
+                <li>
+                    <strong>6.</strong>
+                    The Service uses its selector to identify matching
+                    application Pods.
+                </li>
+
+                <li>
+                    <strong>7.</strong>
+                    Kubernetes networking sends the request to an available
+                    <code>my-app</code> Pod.
+                </li>
+
+                <li>
+                    <strong>8.</strong>
+                    The application container receives the HTTP request.
+                </li>
+
+                <li>
+                    <strong>9.</strong>
+                    The application reads the order ID:
+                    <code>123</code>.
+                </li>
+
+                <li>
+                    <strong>10.</strong>
+                    The application queries the required database or
+                    backend service.
+                </li>
+
+                <li>
+                    <strong>11.</strong>
+                    The backend returns the order information.
+                </li>
+
+                <li>
+                    <strong>12.</strong>
+                    The application creates an HTTP/JSON response.
+                </li>
+
+                <li>
+                    <strong>13.</strong>
+                    The response travels back through the Kubernetes
+                    networking and external load-balancing path.
+                </li>
+
+                <li>
+                    <strong>14.</strong>
+                    The browser receives the response and displays the
+                    requested information.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- BIG PICTURE                                              -->
+    <!-- ====================================================== -->
+
+    <div class="flow">
+
+        <h2 class="flow-title">The Big Picture</h2>
+
+        <pre><code>
+                     APPLICATION DEPLOYMENT
+                              |
+                              v
+                         Helm Chart
+                              |
+                              v
+                  Kubernetes Resources
+                              |
+        +---------------------+----------------------+
+        |                     |                      |
+        v                     v                      v
+    Deployment             Service              Ingress
+        |                     |                      |
+        v                     |                      |
+    ReplicaSet                |                      |
+        |                     |                      |
+        v                     |                      |
+      Pods <------------------+----------------------+
+        |
+        v
+    Container
+        |
+        v
+    Application
+        |
+        | Application needs data
+        v
+  +-----------+------------+-------------+
+  |           |            |             |
+  v           v            v             v
+Database    Cache         S3        Other API
+  |           |            |             |
+  +-----------+------------+-------------+
+                  |
+                  v
+            Data returned
+                  |
+                  v
+             Application
+                  |
+                  v
+             HTTP Response
+                  |
+                  v
+               User
+        </code></pre>
+
+        <div class="notes">
+            <strong>Notes:</strong>
+            The infrastructure layer provides the environment, Kubernetes
+            manages the workload, Helm provides reusable deployment
+            configuration, networking resources move traffic to the
+            correct workload, and the application communicates with
+            backend systems to retrieve or update data.
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+    DevOps · Application Request and Data Flow
+</footer>
+
+</body>
+</html>
