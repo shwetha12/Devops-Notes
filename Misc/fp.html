@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AWS Cloud Deployment & CloudFormation Interview Guide</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        background: #f5f7fa;
+        color: #222;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 25px;
+    }
+
+    h1 {
+        background: #172b4d;
+        color: white;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    h2 {
+        background: #1f4e79;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 7px;
+        margin-top: 35px;
+    }
+
+    h3 {
+        color: #1f4e79;
+        margin-top: 20px;
+    }
+
+    h4 {
+        color: #444;
+        margin-bottom: 5px;
+    }
+
+    .box {
+        background: white;
+        border-left: 5px solid #1f4e79;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 6px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .important {
+        background: #fff8e1;
+        border-left: 5px solid #f0ad00;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 6px;
+    }
+
+    .flow {
+        background: #eef4fb;
+        padding: 15px;
+        border-radius: 7px;
+        font-weight: bold;
+        overflow-x: auto;
+    }
+
+    code {
+        font-family: Consolas, monospace;
+    }
+
+    pre {
+        background: #1e1e1e;
+        color: #e6e6e6;
+        padding: 18px;
+        border-radius: 8px;
+        overflow-x: auto;
+        line-height: 1.45;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        background: white;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    th {
+        background: #dbe8f5;
+    }
+
+    ul {
+        margin-top: 5px;
+    }
+
+    .tag {
+        display: inline-block;
+        background: #e7eef7;
+        padding: 4px 9px;
+        border-radius: 4px;
+        margin: 3px;
+        font-size: 13px;
+    }
+
+    .top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #1f4e79;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>AWS Cloud Deployment & CloudFormation Interview Guide</h1>
+
+<div class="box">
+    <strong>Purpose:</strong>
+    Understand how AWS resources are provisioned with CloudFormation,
+    how application deployment works, and what happens at runtime when
+    a request, event, or job reaches the AWS service.
+</div>
+
+
+<!-- ========================================================= -->
+<!-- GENERAL PIPELINES -->
+<!-- ========================================================= -->
+
+<h2>1. Overall Infrastructure Provisioning Pipeline</h2>
+
+<div class="flow">
+    Application / Infrastructure Requirements
+    → Git Repository
+    → UrbanCode Provisioning Pipeline
+    → CloudFormation
+    → AWS Resources
+    → Infrastructure Ready
+</div>
+
+<div class="box">
+
+<h3>How it works</h3>
+
+<ul>
+    <li>Infrastructure definitions are maintained as CloudFormation YAML/JSON templates.</li>
+    <li>The provisioning pipeline retrieves the CloudFormation template from source control.</li>
+    <li>CloudFormation validates the template and creates or updates the required AWS resources.</li>
+    <li>CloudFormation manages dependencies between resources.</li>
+    <li>Once the stack finishes successfully, the environment is ready for application deployment.</li>
+</ul>
+
+</div>
+
+
+<h2>2. Overall Application Deployment Pipeline</h2>
+
+<div class="flow">
+    Developer Commit
+    → Source Control
+    → UrbanCode Deployment Pipeline
+    → Build
+    → Unit Tests
+    → SonarQube
+    → Fortify
+    → FOSS
+    → Package / Docker Image
+    → ECR / Artifact Repository
+    → AWS Deployment
+    → Health Check
+    → CloudWatch
+</div>
+
+<div class="box">
+
+<h3>Important distinction</h3>
+
+<ul>
+    <li><strong>Provisioning:</strong> Creates the AWS infrastructure required by the application.</li>
+    <li><strong>Deployment:</strong> Places the application code/container into that already-provisioned infrastructure.</li>
+</ul>
+
+</div>
+
+
+<h2>3. AWS Resource Quick Reference</h2>
+
+<table>
+<tr>
+    <th>Technology</th>
+    <th>Primary Purpose</th>
+    <th>Typical Trigger</th>
+</tr>
+
+<tr>
+    <td>ECR</td>
+    <td>Stores Docker container images</td>
+    <td>Docker image push</td>
+</tr>
+
+<tr>
+    <td>ECS / Fargate</td>
+    <td>Runs containerized applications</td>
+    <td>HTTP request / service deployment</td>
+</tr>
+
+<tr>
+    <td>Lambda</td>
+    <td>Runs serverless functions</td>
+    <td>API, event, schedule, queue, S3 event</td>
+</tr>
+
+<tr>
+    <td>SQS</td>
+    <td>Asynchronous message queue</td>
+    <td>Message sent to queue</td>
+</tr>
+
+<tr>
+    <td>SNS</td>
+    <td>Publish/subscribe messaging</td>
+    <td>Message published to topic</td>
+</tr>
+
+<tr>
+    <td>EventBridge</td>
+    <td>Event routing</td>
+    <td>AWS/application event</td>
+</tr>
+
+<tr>
+    <td>CloudWatch</td>
+    <td>Logs, metrics, alarms and monitoring</td>
+    <td>AWS/application activity</td>
+</tr>
+
+<tr>
+    <td>AWS Batch</td>
+    <td>Runs batch jobs</td>
+    <td>Job submission</td>
+</tr>
+
+<tr>
+    <td>EMR</td>
+    <td>Big-data processing</td>
+    <td>Data processing job</td>
+</tr>
+
+<tr>
+    <td>DynamoDB</td>
+    <td>Managed NoSQL database</td>
+    <td>Application read/write</td>
+</tr>
+
+<tr>
+    <td>S3</td>
+    <td>Object storage</td>
+    <td>Upload/download/event</td>
+</tr>
+
+<tr>
+    <td>Step Functions</td>
+    <td>Workflow orchestration</td>
+    <td>Workflow execution</td>
+</tr>
+
+<tr>
+    <td>IAM</td>
+    <td>Authentication and authorization</td>
+    <td>AWS API/service access</td>
+</tr>
+
+<tr>
+    <td>VPC</td>
+    <td>Network isolation</td>
+    <td>All network-based AWS workloads</td>
+</tr>
+</table>
+
+
+<!-- ========================================================= -->
+<!-- ECR -->
+<!-- ========================================================= -->
+
+<h2>4. Amazon ECR</h2>
+
+<h3>What is ECR? When is it used? How does it work?</h3>
+
+<div class="box">
+
+<strong>Amazon Elastic Container Registry (ECR)</strong> is a managed private
+container registry used to store Docker/container images.
+
+It is commonly used when an application is packaged as a Docker image.
+ECS/Fargate, AWS Batch and other container services can pull the image from ECR
+when starting a container.
+
+</div>
+
+<div class="flow">
+    Dockerfile
+    → Docker Build
+    → Docker Image
+    → ECR Repository
+    → Image Tag
+    → ECS / Batch pulls image
+</div>
+
+
+<h3>CloudFormation Provisioning</h3>
+
+<div class="box">
+
+<p>
+CloudFormation creates the ECR repository before application deployment.
+The repository provides a controlled location where the application container
+image can be stored.
+</p>
+
+<p>
+The deployment pipeline later builds the Docker image and pushes it into this
+repository. The runtime service then references the image URI.
+</p>
+
+</div>
+
+<pre><code>AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+
+  # Private ECR repository for application container images
+  ApplicationRepository:
+    Type: AWS::ECR::Repository
+
+    Properties:
+      RepositoryName: my-application
+
+      # Scan images when they are pushed
+      ImageScanningConfiguration:
+        ScanOnPush: true
+
+      # Keep repository contents protected
+      EncryptionConfiguration:
+        EncryptionType: AES256
+
+      # Delete repository contents when stack is deleted
+      EmptyOnDelete: true
+</code></pre>
+
+
+<h3>What happens after deployment?</h3>
+
+<div class="flow">
+    Developer Commit
+    → Build Docker Image
+    → Tag Image
+    → Push Image to ECR
+    → ECS/Batch references Image URI
+    → Container Runtime Pulls Image
+</div>
+
+<div class="box">
+
+<p>
+For ECS/Fargate, the ECS task definition contains the ECR image URI.
+When a new Fargate task starts, the task execution role allows the task to
+authenticate to ECR and pull the image.
+</p>
+
+<p>
+For AWS Batch, the job definition normally contains the container image.
+When Batch starts the job, the underlying compute environment launches the
+container using that image.
+</p>
+
+</div>
+
+
+<h3>Troubleshooting</h3>
+
+<ul>
+    <li>Image does not exist in ECR.</li>
+    <li>Incorrect image tag.</li>
+    <li>Incorrect AWS account or region.</li>
+    <li>Task execution role does not have ECR permissions.</li>
+    <li>Network connectivity prevents image pull.</li>
+</ul>
+
+
+<!-- ========================================================= -->
+<!-- ECS -->
+<!-- ========================================================= -->
+
+<h2>5. Amazon ECS with Fargate</h2>
+
+<h3>What is ECS/Fargate? When is it used? How does it work?</h3>
+
+<div class="box">
+
+<strong>ECS</strong> is AWS's container orchestration service.
+It manages containerized applications.
+
+<strong>Fargate</strong> is the serverless compute option for ECS.
+With Fargate, AWS manages the underlying servers while the application team
+defines CPU, memory, networking and container configuration.
+
+</div>
+
+<div class="flow">
+    Docker Image
+    → ECR
+    → ECS Task Definition
+    → ECS Service
+    → Fargate Task
+    → Container
+</div>
+
+
+<h3>CloudFormation Resources Required</h3>
+
+<table>
+<tr>
+    <th>Resource</th>
+    <th>Why it is required</th>
+</tr>
+
+<tr>
+    <td>ECS Cluster</td>
+    <td>Logical grouping where ECS services/tasks run.</td>
+</tr>
+
+<tr>
+    <td>Task Definition</td>
+    <td>Defines container image, CPU, memory, ports, environment variables and logging.</td>
+</tr>
+
+<tr>
+    <td>ECS Service</td>
+    <td>Maintains the desired number of running tasks.</td>
+</tr>
+
+<tr>
+    <td>IAM Task Execution Role</td>
+    <td>Allows ECS/Fargate to pull images and send logs to CloudWatch.</td>
+</tr>
+
+<tr>
+    <td>VPC</td>
+    <td>Provides network isolation.</td>
+</tr>
+
+<tr>
+    <td>Private Subnets</td>
+    <td>Provide network locations for Fargate tasks.</td>
+</tr>
+
+<tr>
+    <td>Security Group</td>
+    <td>Controls inbound and outbound traffic.</td>
+</tr>
+
+<tr>
+    <td>CloudWatch Log Group</td>
+    <td>Stores application/container logs.</td>
+</tr>
+
+<tr>
+    <td>ALB</td>
+    <td>Receives HTTP/HTTPS requests and distributes traffic to healthy tasks.</td>
+</tr>
+
+</table>
+
+
+<h3>CloudFormation Example</h3>
+
+<pre><code>Resources:
+
+  # ECS cluster
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: my-application-cluster
+
+
+  # CloudWatch log group for container logs
+  ApplicationLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /ecs/my-application
+      RetentionInDays: 30
+
+
+  # IAM role used by ECS/Fargate to pull images
+  # and send logs to CloudWatch
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+
+            Action:
+              - sts:AssumeRole
+
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+
+  # Defines how the container should run
+  ApplicationTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+
+    Properties:
+
+      Family: my-application
+
+      NetworkMode: awsvpc
+
+      RequiresCompatibilities:
+        - FARGATE
+
+      Cpu: '512'
+      Memory: '1024'
+
+      ExecutionRoleArn:
+        Fn::GetAtt:
+          - ECSTaskExecutionRole
+          - Arn
+
+      ContainerDefinitions:
+
+        - Name: application
+
+          # Image normally comes from ECR
+          Image: 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-application:latest
+
+          Essential: true
+
+          PortMappings:
+            - ContainerPort: 8080
+
+          LogConfiguration:
+            LogDriver: awslogs
+
+            Options:
+              awslogs-group: /ecs/my-application
+              awslogs-region: us-east-1
+              awslogs-stream-prefix: application
+</code></pre>
+
+
+<h3>What happens when an HTTP request comes?</h3>
+
+<div class="flow">
+    User
+    → DNS
+    → Load Balancer
+    → Target Group
+    → ECS Service
+    → Healthy Fargate Task
+    → Container
+    → Application Response
+    → Load Balancer
+    → User
+</div>
+
+<div class="box">
+
+<p>
+The Application Load Balancer receives the HTTP/HTTPS request.
+The ALB checks the target group and sends traffic to a healthy Fargate task.
+</p>
+
+<p>
+The request reaches the application's container port. The application processes
+the request and sends the response back through the ALB to the client.
+</p>
+
+<p>
+Container logs are written to CloudWatch. ECS maintains the desired number of
+tasks defined in the service.
+</p>
+
+</div>
+
+
+<h3>What happens during a new deployment?</h3>
+
+<div class="flow">
+    New Code
+    → Docker Build
+    → ECR
+    → New Task Definition Revision
+    → ECS Service Update
+    → New Fargate Tasks
+    → Health Check
+    → Traffic
+    → Old Tasks Removed
+</div>
+
+<h3>Troubleshooting</h3>
+
+<ul>
+    <li>Task stuck in PENDING.</li>
+    <li>Task stops immediately.</li>
+    <li>Cannot pull image from ECR.</li>
+    <li>Incorrect task role or execution role.</li>
+    <li>Security group blocks traffic.</li>
+    <li>Target group health check fails.</li>
+    <li>Incorrect container port.</li>
+    <li>Insufficient CPU or memory.</li>
+    <li>Application starts but immediately exits.</li>
+</ul>
+
+
+<!-- ========================================================= -->
+<!-- LAMBDA -->
+<!-- ========================================================= -->
+
+<h2>6. AWS Lambda</h2>
+
+<h3>What is Lambda? When is it used? How does it work?</h3>
+
+<div class="box">
+
+AWS Lambda is a serverless compute service used to execute code without
+managing servers.
+
+It is commonly used for event-driven processing, APIs, scheduled jobs,
+file processing, automation and lightweight backend operations.
+
+AWS automatically creates the execution environment when the function is
+invoked and manages scaling.
+
+</div>
+
+<div class="flow">
+    Event
+    → Lambda
+    → Execution Environment
+    → Function Code
+    → Response
+</div>
+
+
+<h3>CloudFormation Resources Required</h3>
+
+<table>
+<tr>
+    <th>Resource</th>
+    <th>Purpose</th>
+</tr>
+
+<tr>
+    <td>Lambda Function</td>
+    <td>Contains the application code and runtime configuration.</td>
+</tr>
+
+<tr>
+    <td>IAM Execution Role</td>
+    <td>Defines what AWS resources the Lambda function can access.</td>
+</tr>
+
+<tr>
+    <td>CloudWatch Log Group</td>
+    <td>Stores Lambda execution logs.</td>
+</tr>
+
+<tr>
+    <td>API Gateway</td>
+    <td>Can expose Lambda through an HTTP/REST API.</td>
+</tr>
+
+<tr>
+    <td>SQS/EventBridge/S3</td>
+    <td>Can act as event sources that trigger Lambda.</td>
+</tr>
+
+</table>
+
+
+<h3>CloudFormation Example</h3>
+
+<pre><code>Resources:
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+
+    Properties:
+
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+
+        Statement:
+          - Effect: Allow
+
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+
+            Action:
+              - sts:AssumeRole
+
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+
+  ApplicationFunction:
+    Type: AWS::Lambda::Function
+
+    Properties:
+
+      FunctionName: my-application-function
+
+      Runtime: python3.12
+
+      Handler: lambda_function.lambda_handler
+
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+
+      Code:
+        ZipFile: |
+          def lambda_handler(event, context):
+              return {
+                  "statusCode": 200,
+                  "body": "Hello from Lambda"
+              }
+
+
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+
+    Properties:
+      LogGroupName:
+        /aws/lambda/my-application-function
+
+      RetentionInDays: 30
+</code></pre>
+
+
+<h3>What happens when Lambda is invoked?</h3>
+
+<div class="flow">
+    API / S3 / SQS / EventBridge / Schedule
+    → Lambda Invocation
+    → Lambda Execution Environment
+    → Python/Java/Node/etc. Code
+    → AWS Service Calls
+    → Response
+    → CloudWatch Logs
+</div>
+
+<div class="box">
+
+<p>
+For example, if an S3 object is uploaded, an S3 event can invoke Lambda.
+Lambda receives the event information and executes the function.
+</p>
+
+<p>
+Lambda can then read the object from S3, process it, write data to DynamoDB,
+send an SQS message, or invoke another AWS service depending on its IAM
+permissions.
+</p>
+
+</div>
+
+
+<h3>Troubleshooting</h3>
+
+<ul>
+    <li>Lambda timeout.</li>
+    <li>Insufficient IAM permissions.</li>
+    <li>Incorrect handler.</li>
+    <li>Missing environment variable.</li>
+    <li>Package/dependency problem.</li>
+    <li>Incorrect event format.</li>
+    <li>Concurrency/throttling issues.</li>
+    <li>VPC networking problems.</li>
+</ul>
+
+
+<!-- ========================================================= -->
+<!-- SQS -->
+<!-- ========================================================= -->
+
+<h2>7. Amazon SQS</h2>
+
+<h3>What is SQS? When is it used? How does it work?</h3>
+
+<div class="box">
+
+Amazon SQS is a managed message queue used to decouple applications.
+
+Instead of one application directly waiting for another application to
+process something, it places a message into SQS. A consumer processes the
+message asynchronously.
+
+This improves reliability and allows producers and consumers to scale
+independently.
+
+</div>
+
+<div class="flow">
+    Producer
+    → SQS Queue
+    → Consumer
+    → Processing
+    → Delete Message
+</div>
+
+
+<h3>CloudFormation Resources</h3>
+
+<pre><code>Resources:
+
+  ApplicationQueue:
+    Type: AWS::SQS::Queue
+
+    Properties:
+
+      QueueName: my-application-queue
+
+      # Message remains invisible to other consumers
+      # while the current consumer processes it
+      VisibilityTimeout: 60
+
+      # Messages can be retained for later processing
+      MessageRetentionPeriod: 345600
+</code></pre>
+
+
+<h3>What happens when a message is submitted?</h3>
+
+<div class="flow">
+    Application
+    → SendMessage
+    → SQS Queue
+    → Message Stored
+    → Consumer Polls
+    → Message Becomes Invisible
+    → Processing
+    → DeleteMessage
+</div>
+
+<div class="box">
+
+<p>
+The producer sends a message to SQS. SQS durably stores the message until a
+consumer retrieves it.
+</p>
+
+<p>
+The consumer processes the message and deletes it after successful processing.
+If processing fails and the visibility timeout expires, the message can become
+available again.
+</p>
+
+</div>
+
+
+<h3>Important interview concepts</h3>
+
+<ul>
+    <li>Standard Queue – high throughput and at-least-once delivery.</li>
+    <li>FIFO Queue – ordered processing and deduplication features.</li>
+    <li>Visibility Timeout – temporarily hides a message during processing.</li>
+    <li>Dead Letter Queue – stores messages that repeatedly fail processing.</li>
+</ul>
+
+
+<!-- ========================================================= -->
+<!-- SNS -->
+<!-- ========================================================= -->
+
+<h2>8. Amazon SNS</h2>
+
+<h3>What is SNS? When is it used?</h3>
+
+<div class="box">
+
+SNS is a managed publish/subscribe messaging service.
+
+A producer publishes a message to an SNS topic, and SNS distributes that
+message to subscribed endpoints such as SQS, Lambda, HTTP endpoints or
+other supported destinations.
+
+</div>
+
+<div class="flow">
+    Publisher
+    → SNS Topic
+    → Multiple Subscribers
+    → SQS / Lambda / Other Consumers
+</div>
+
+
+<h3>CloudFormation</h3>
+
+<pre><code>Resources:
+
+  ApplicationTopic:
+    Type: AWS::SNS::Topic
+
+    Properties:
+      TopicName: my-application-topic
+</code></pre>
+
+
+<h3>Runtime Flow</h3>
+
+<div class="flow">
+    Application Event
+    → Publish SNS Message
+    → SNS Topic
+    → SNS Fan-Out
+    → Subscriber(s)
+    → Processing
+</div>
+
+<div class="box">
+
+<p>
+SNS is useful when one event needs to be delivered to multiple consumers.
+For example, one application event can send messages to multiple SQS queues
+for independent processing.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- EVENTBRIDGE -->
+<!-- ========================================================= -->
+
+<h2>9. Amazon EventBridge</h2>
+
+<h3>What is EventBridge? When is it used?</h3>
+
+<div class="box">
+
+EventBridge is an event routing service.
+
+It receives events from AWS services or applications and evaluates them
+against rules. Matching events are sent to configured targets.
+
+It is commonly used for event-driven architectures and scheduled execution.
+
+</div>
+
+<div class="flow">
+    Event Source
+    → Event Bus
+    → Event Rule
+    → Event Pattern Match
+    → Target
+    → Lambda / SQS / Step Functions / Batch / etc.
+</div>
+
+
+<h3>CloudFormation</h3>
+
+<pre><code>Resources:
+
+  ApplicationEventBus:
+    Type: AWS::Events::EventBus
+
+    Properties:
+      Name: my-application-bus
+
+
+  ApplicationRule:
+    Type: AWS::Events::Rule
+
+    Properties:
+
+      EventBusName:
+        Ref: ApplicationEventBus
+
+      EventPattern:
+        source:
+          - my.application
+
+        detail-type:
+          - ApplicationEvent
+
+      State: ENABLED
+
+      # Target could be Lambda, SQS, Step Functions, etc.
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - ApplicationFunction
+              - Arn
+
+          Id: LambdaTarget
+</code></pre>
+
+
+<h3>What happens when an event occurs?</h3>
+
+<div class="flow">
+    AWS/Application
+    → EventBridge
+    → Event Bus
+    → Rule Evaluates Event
+    → Match
+    → Target Invoked
+</div>
+
+<div class="box">
+
+<p>
+For example, an application publishes an event indicating that a file was
+processed. EventBridge receives the event and checks its rules.
+</p>
+
+<p>
+If the event matches a rule, EventBridge invokes the configured target such
+as Lambda, SQS or Step Functions.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- CLOUDWATCH -->
+<!-- ========================================================= -->
+
+<h2>10. Amazon CloudWatch</h2>
+
+<h3>What is CloudWatch? When is it used?</h3>
+
+<div class="box">
+
+CloudWatch is AWS's monitoring and observability service.
+
+It collects metrics and logs and can create alarms based on thresholds.
+It is used to monitor application health, infrastructure behavior, errors,
+latency, CPU, memory and other operational information.
+
+</div>
+
+
+<h3>CloudFormation Resources</h3>
+
+<pre><code>Resources:
+
+  ApplicationLogGroup:
+    Type: AWS::Logs::LogGroup
+
+    Properties:
+
+      LogGroupName: /application/my-application
+
+      RetentionInDays: 30
+
+
+  HighErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+
+    Properties:
+
+      AlarmDescription: High application errors
+
+      Namespace: AWS/Lambda
+
+      MetricName: Errors
+
+      Statistic: Sum
+
+      Period: 300
+
+      EvaluationPeriods: 1
+
+      Threshold: 5
+
+      ComparisonOperator: GreaterThanThreshold
+
+      TreatMissingData: notBreaching
+</code></pre>
+
+
+<h3>What happens at runtime?</h3>
+
+<div class="flow">
+    Application / AWS Service
+    → Logs / Metrics
+    → CloudWatch
+    → Dashboard / Alarm
+    → Notification / Operational Action
+</div>
+
+<div class="box">
+
+<p>
+For example, an ECS container writes application logs. The ECS logging
+configuration sends those logs to CloudWatch Logs.
+</p>
+
+<p>
+CloudWatch metrics can also be used to detect abnormal behavior. An alarm
+can transition state when a configured threshold is exceeded.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- AWS BATCH -->
+<!-- ========================================================= -->
+
+<h2>11. AWS Batch</h2>
+
+<h3>What is AWS Batch? When is it used?</h3>
+
+<div class="box">
+
+AWS Batch is a managed batch-processing service.
+
+It is used when work does not need to be handled as a continuously running
+web application. Examples include large data processing jobs, scheduled
+processing, scientific workloads and compute-intensive jobs.
+
+Batch handles job queues, scheduling and compute capacity.
+
+</div>
+
+<div class="flow">
+    Submit Job
+    → Job Queue
+    → Scheduler
+    → Compute Environment
+    → Container
+    → Processing
+    → SUCCESS / FAILED
+</div>
+
+
+<h3>CloudFormation Resources Required</h3>
+
+<table>
+<tr>
+    <th>Resource</th>
+    <th>Purpose</th>
+</tr>
+
+<tr>
+    <td>ECR</td>
+    <td>Stores the Docker image used by the batch job.</td>
+</tr>
+
+<tr>
+    <td>Compute Environment</td>
+    <td>Defines the compute capacity where jobs execute.</td>
+</tr>
+
+<tr>
+    <td>Job Queue</td>
+    <td>Holds submitted jobs waiting for execution.</td>
+</tr>
+
+<tr>
+    <td>Job Definition</td>
+    <td>Defines container image, CPU, memory, command and runtime settings.</td>
+</tr>
+
+<tr>
+    <td>IAM Role</td>
+    <td>Provides permissions required by Batch and the container.</td>
+</tr>
+
+<tr>
+    <td>VPC/Subnets/SG</td>
+    <td>Provide networking for the compute resources.</td>
+</tr>
+
+<tr>
+    <td>CloudWatch</td>
+    <td>Provides logs and monitoring.</td>
+</tr>
+
+</table>
+
+
+<h3>CloudFormation Example</h3>
+
+<pre><code>Resources:
+
+  BatchComputeEnvironment:
+    Type: AWS::Batch::ComputeEnvironment
+
+    Properties:
+
+      Type: MANAGED
+
+      ComputeResources:
+
+        Type: FARGATE
+
+        MaxvCpus: 16
+
+        Subnets:
+          - subnet-12345678
+
+        SecurityGroupIds:
+          - sg-12345678
+
+
+  BatchJobQueue:
+    Type: AWS::Batch::JobQueue
+
+    Properties:
+
+      JobQueueName: my-batch-queue
+
+      Priority: 1
+
+      State: ENABLED
+
+      ComputeEnvironmentOrder:
+
+        - Order: 1
+
+          ComputeEnvironment:
+            Ref: BatchComputeEnvironment
+
+
+  BatchJobDefinition:
+    Type: AWS::Batch::JobDefinition
+
+    Properties:
+
+      Type: container
+
+      JobDefinitionName: my-batch-job
+
+      PlatformCapabilities:
+        - FARGATE
+
+      ContainerProperties:
+
+        Image: 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-batch:latest
+
+        ResourceRequirements:
+
+          - Type: VCPU
+            Value: "1"
+
+          - Type: MEMORY
+            Value: "2048"
+
+        Command:
+          - python
+          - application.py
+</code></pre>
+
+
+<h3>What happens when a job is submitted?</h3>
+
+<div class="flow">
+    Application
+    → SubmitJob
+    → Job Queue
+    → Batch Scheduler
+    → Compute Environment
+    → Fargate Container
+    → ECR Image Pulled
+    → Job Executes
+    → CloudWatch Logs
+    → Job Status
+</div>
+
+<div class="box">
+
+<p>
+The application submits a job to the Batch job queue. The Batch scheduler
+determines when the job can run based on available capacity and scheduling
+rules.
+</p>
+
+<p>
+The compute environment provides the execution capacity. The container image
+is pulled from ECR and the configured command is executed.
+</p>
+
+<p>
+The job eventually reaches a status such as SUCCEEDED or FAILED.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- EMR -->
+<!-- ========================================================= -->
+
+<h2>12. Amazon EMR</h2>
+
+<h3>What is EMR? When is it used?</h3>
+
+<div class="box">
+
+Amazon EMR is a managed big-data processing platform.
+
+It is commonly used for distributed processing frameworks such as Apache
+Spark and Hadoop. It allows large datasets to be processed across multiple
+compute nodes.
+
+</div>
+
+<div class="flow">
+    Data in S3
+    → EMR Cluster
+    → Spark/Hadoop Processing
+    → Results
+    → S3 / Database
+</div>
+
+
+<h3>CloudFormation Resources</h3>
+
+<div class="box">
+
+<ul>
+    <li><strong>EMR Cluster:</strong> Provides the processing environment.</li>
+    <li><strong>EC2 Instances:</strong> Provide compute capacity for the cluster.</li>
+    <li><strong>IAM Roles:</strong> Allow EMR and EC2 instances to access AWS resources.</li>
+    <li><strong>S3:</strong> Stores input and output data.</li>
+    <li><strong>VPC/Subnets:</strong> Provide networking.</li>
+    <li><strong>Security Groups:</strong> Control network traffic.</li>
+    <li><strong>CloudWatch:</strong> Provides monitoring and logs.</li>
+</ul>
+
+</div>
+
+<pre><code>Resources:
+
+  EMRCluster:
+    Type: AWS::EMR::Cluster
+
+    Properties:
+
+      Name: my-data-processing-cluster
+
+      ReleaseLabel: emr-7.0.0
+
+      Applications:
+        - Name: Spark
+
+      Instances:
+
+        MasterInstanceGroup:
+          InstanceCount: 1
+
+          InstanceType: m5.xlarge
+
+          InstanceGroupType: MASTER
+
+        CoreInstanceGroup:
+          InstanceCount: 2
+
+          InstanceType: m5.xlarge
+
+          InstanceGroupType: CORE
+
+      JobFlowRole: EMR_EC2_DefaultRole
+
+      ServiceRole: EMR_DefaultRole
+</code></pre>
+
+
+<h3>What happens when a data-processing job runs?</h3>
+
+<div class="flow">
+    Input Data
+    → S3
+    → EMR Cluster
+    → Spark/Hadoop
+    → Distributed Processing
+    → Output
+    → S3
+</div>
+
+<div class="box">
+
+<p>
+The processing framework divides work across cluster nodes. Large datasets
+can therefore be processed in parallel instead of on one machine.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- DYNAMODB -->
+<!-- ========================================================= -->
+
+<h2>13. Amazon DynamoDB</h2>
+
+<h3>What is DynamoDB? When is it used?</h3>
+
+<div class="box">
+
+DynamoDB is a fully managed NoSQL database.
+
+It is commonly used when applications need low-latency key-value or document
+data storage without managing database servers.
+
+Applications interact with DynamoDB through AWS APIs/SDKs.
+
+</div>
+
+
+<h3>CloudFormation</h3>
+
+<pre><code>Resources:
+
+  ApplicationTable:
+    Type: AWS::DynamoDB::Table
+
+    Properties:
+
+      TableName: application-data
+
+      BillingMode: PAY_PER_REQUEST
+
+      AttributeDefinitions:
+
+        - AttributeName: id
+          AttributeType: S
+
+      KeySchema:
+
+        - AttributeName: id
+          KeyType: HASH
+</code></pre>
+
+
+<h3>What happens when an application request reads data?</h3>
+
+<div class="flow">
+    User Request
+    → Application
+    → IAM Authorization
+    → DynamoDB API
+    → Table
+    → Read/Write
+    → Application
+    → User
+</div>
+
+<div class="box">
+
+<p>
+The application uses the AWS SDK/API to perform operations such as PutItem,
+GetItem, UpdateItem or Query.
+</p>
+
+<p>
+IAM permissions determine whether the application is allowed to perform the
+requested DynamoDB operation.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- S3 -->
+<!-- ========================================================= -->
+
+<h2>14. Amazon S3</h2>
+
+<h3>What is S3? When is it used?</h3>
+
+<div class="box">
+
+Amazon S3 is an object storage service.
+
+It is used to store files, application artifacts, logs, data files,
+backups, static content and large datasets.
+
+Data is stored as objects inside buckets.
+
+</div>
+
+<h3>CloudFormation</h3>
+
+<pre><code>Resources:
+
+  ApplicationBucket:
+    Type: AWS::S3::Bucket
+
+    Properties:
+
+      BucketName: my-application-data
+
+      VersioningConfiguration:
+        Status: Enabled
+
+      PublicAccessBlockConfiguration:
+
+        BlockPublicAcls: true
+
+        BlockPublicPolicy: true
+
+        IgnorePublicAcls: true
+
+        RestrictPublicBuckets: true
+</code></pre>
+
+
+<h3>What happens when a file is uploaded?</h3>
+
+<div class="flow">
+    Application/User
+    → S3 API
+    → Bucket
+    → Object Stored
+    → Optional S3 Event
+    → Lambda / EventBridge
+</div>
+
+<div class="box">
+
+<p>
+S3 stores the uploaded object. An event can optionally trigger another AWS
+service, such as Lambda or EventBridge, for additional processing.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- STEP FUNCTIONS -->
+<!-- ========================================================= -->
+
+<h2>15. AWS Step Functions</h2>
+
+<h3>What is Step Functions? When is it used?</h3>
+
+<div class="box">
+
+AWS Step Functions is a workflow orchestration service.
+
+It coordinates multiple processing steps and maintains the state of a
+workflow. A workflow can invoke Lambda, Batch, ECS, DynamoDB and other
+AWS services.
+
+It is useful when an application needs multiple dependent processing steps,
+retries, error handling and branching.
+
+</div>
+
+<div class="flow">
+    Start
+    → Step 1
+    → Step 2
+    → Decision
+    → Step 3 / Step 4
+    → Success / Failure
+</div>
+
+
+<h3>CloudFormation</h3>
+
+<pre><code>Resources:
+
+  StepFunctionRole:
+    Type: AWS::IAM::Role
+
+    Properties:
+
+      AssumeRolePolicyDocument:
+
+        Version: '2012-10-17'
+
+        Statement:
+
+          - Effect: Allow
+
+            Principal:
+              Service:
+                - states.amazonaws.com
+
+            Action:
+              - sts:AssumeRole
+
+
+  ApplicationStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+
+    Properties:
+
+      StateMachineName: application-workflow
+
+      RoleArn:
+        Fn::GetAtt:
+          - StepFunctionRole
+          - Arn
+
+      DefinitionString: |
+        {
+          "StartAt": "Process",
+          "States": {
+
+            "Process": {
+              "Type": "Pass",
+              "Result": "Processing started",
+              "End": true
+            }
+
+          }
+        }
+</code></pre>
+
+
+<h3>What happens when a workflow starts?</h3>
+
+<div class="flow">
+    StartExecution
+    → Step Functions
+    → State 1
+    → State 2
+    → Service Invocation
+    → Next State
+    → Success / Failure
+</div>
+
+<div class="box">
+
+<p>
+Step Functions maintains the workflow state and moves from one state to the
+next according to the state-machine definition.
+</p>
+
+<p>
+A workflow could, for example, invoke Lambda to validate input, invoke Batch
+to process data, then write the result to DynamoDB or S3.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- IAM -->
+<!-- ========================================================= -->
+
+<h2>16. AWS IAM</h2>
+
+<h3>What is IAM? When is it used?</h3>
+
+<div class="box">
+
+IAM controls authentication and authorization in AWS.
+
+It determines who or what can access AWS resources and which operations are
+allowed.
+
+In application architectures, IAM roles are especially important because
+AWS services such as Lambda, ECS and Step Functions assume roles to access
+other services.
+
+</div>
+
+<div class="flow">
+    AWS Service
+    → Assume IAM Role
+    → Temporary Credentials
+    → AWS API
+    → IAM Policy Evaluation
+    → Allow / Deny
+</div>
+
+
+<h3>CloudFormation</h3>
+
+<pre><code>Resources:
+
+  ApplicationRole:
+    Type: AWS::IAM::Role
+
+    Properties:
+
+      RoleName: application-role
+
+      AssumeRolePolicyDocument:
+
+        Version: '2012-10-17'
+
+        Statement:
+
+          - Effect: Allow
+
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+
+            Action:
+              - sts:AssumeRole
+
+      Policies:
+
+        - PolicyName: ReadApplicationBucket
+
+          PolicyDocument:
+
+            Version: '2012-10-17'
+
+            Statement:
+
+              - Effect: Allow
+
+                Action:
+                  - s3:GetObject
+
+                Resource:
+                  - arn:aws:s3:::my-application-data/*
+</code></pre>
+
+
+<h3>What happens when a service accesses another AWS service?</h3>
+
+<div class="flow">
+    Lambda
+    → Assume Role
+    → Temporary Credentials
+    → S3 API
+    → IAM Policy Check
+    → Allow / Deny
+</div>
+
+
+<div class="important">
+
+<strong>Interview point:</strong>
+
+Prefer IAM roles and temporary credentials for AWS workloads instead of
+hard-coding AWS access keys inside application code.
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- VPC -->
+<!-- ========================================================= -->
+
+<h2>17. AWS VPC and Networking</h2>
+
+<h3>What is VPC? When is it used?</h3>
+
+<div class="box">
+
+A VPC provides an isolated network environment for AWS resources.
+
+Applications such as ECS/Fargate, Lambda, EMR and other services can use
+subnets, route tables and security groups to control how network traffic
+moves between resources and external destinations.
+
+</div>
+
+<div class="flow">
+    VPC
+    → Subnets
+    → Route Tables
+    → Internet/NAT Gateway
+    → Security Groups
+    → AWS Resources
+</div>
+
+
+<h3>CloudFormation Resources</h3>
+
+<table>
+<tr>
+    <th>Resource</th>
+    <th>Purpose</th>
+</tr>
+
+<tr>
+    <td>VPC</td>
+    <td>Creates the isolated network.</td>
+</tr>
+
+<tr>
+    <td>Subnet</td>
+    <td>Provides IP address ranges where resources can run.</td>
+</tr>
+
+<tr>
+    <td>Route Table</td>
+    <td>Determines where network traffic is sent.</td>
+</tr>
+
+<tr>
+    <td>Internet Gateway</td>
+    <td>Provides internet connectivity for resources/routes that use it.</td>
+</tr>
+
+<tr>
+    <td>NAT Gateway</td>
+    <td>Allows private-subnet resources to initiate outbound internet connections.</td>
+</tr>
+
+<tr>
+    <td>Security Group</td>
+    <td>Controls network traffic to/from supported resources.</td>
+</tr>
+
+</table>
+
+
+<h3>CloudFormation Example</h3>
+
+<pre><code>Resources:
+
+  ApplicationVPC:
+    Type: AWS::EC2::VPC
+
+    Properties:
+
+      CidrBlock: 10.0.0.0/16
+
+      EnableDnsSupport: true
+
+      EnableDnsHostnames: true
+
+
+  ApplicationSubnet:
+    Type: AWS::EC2::Subnet
+
+    Properties:
+
+      VpcId:
+        Ref: ApplicationVPC
+
+      CidrBlock: 10.0.1.0/24
+
+      AvailabilityZone: us-east-1a
+
+
+  ApplicationSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+
+    Properties:
+
+      GroupDescription: Application security group
+
+      VpcId:
+        Ref: ApplicationVPC
+
+      SecurityGroupIngress:
+
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 10.0.0.0/16
+</code></pre>
+
+
+<h3>What happens when a request reaches the application?</h3>
+
+<div class="flow">
+    Client
+    → Load Balancer
+    → Network
+    → Route Table
+    → Security Group
+    → Application
+</div>
+
+<div class="box">
+
+<p>
+The request travels through the AWS networking components. Route tables
+determine the next network destination, while security groups determine
+whether the traffic is permitted.
+</p>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- CLOUD FORMATION -->
+<!-- ========================================================= -->
+
+<h2>18. AWS CloudFormation</h2>
+
+<h3>What is CloudFormation? When is it used?</h3>
+
+<div class="box">
+
+CloudFormation is AWS Infrastructure as Code.
+
+Instead of manually creating AWS resources through the console, infrastructure
+is defined in YAML or JSON templates.
+
+CloudFormation creates, updates and deletes resources according to the
+template and maintains the relationship between resources.
+
+</div>
+
+<div class="flow">
+    Git
+    → CloudFormation Template
+    → Validate
+    → Create/Update Stack
+    → Dependency Resolution
+    → AWS Resources
+    → Stack Complete
+</div>
+
+
+<h3>Example resource dependency</h3>
+
+<div class="flow">
+    VPC
+    → Subnet
+    → Security Group
+    → ECS
+    → Task Definition
+    → ECS Service
+    → ALB
+</div>
+
+<div class="box">
+
+<p>
+For example, an ECS service needs networking information, a task definition,
+security groups and subnets. CloudFormation can create these resources and
+reference outputs from one resource in another.
+</p>
+
+</div>
+
+
+<h3>CloudFormation Interview Concepts</h3>
+
+<ul>
+    <li>Stack</li>
+    <li>Template</li>
+    <li>Parameters</li>
+    <li>Mappings</li>
+    <li>Conditions</li>
+    <li>Resources</li>
+    <li>Outputs</li>
+    <li>Intrinsic functions</li>
+    <li>DependsOn</li>
+    <li>Change Sets</li>
+    <li>Stack Updates</li>
+    <li>Rollback</li>
+    <li>Nested Stacks</li>
+    <li>Drift Detection</li>
+</ul>
+
+
+<!-- ========================================================= -->
+<!-- TERRAFORM -->
+<!-- ========================================================= -->
+
+<h2>19. Terraform vs CloudFormation</h2>
+
+<div class="box">
+
+<strong>Terraform</strong> and <strong>CloudFormation</strong> are both
+Infrastructure as Code approaches.
+
+Terraform uses HashiCorp Configuration Language (HCL) and can manage resources
+across multiple cloud providers.
+
+CloudFormation is AWS-native and uses YAML or JSON to define AWS resources.
+
+</div>
+
+<table>
+
+<tr>
+    <th>Terraform</th>
+    <th>CloudFormation</th>
+</tr>
+
+<tr>
+    <td>HCL</td>
+    <td>YAML / JSON</td>
+</tr>
+
+<tr>
+    <td>Multi-cloud capable</td>
+    <td>AWS-focused</td>
+</tr>
+
+<tr>
+    <td>terraform plan</td>
+    <td>Change Sets / stack updates</td>
+</tr>
+
+<tr>
+    <td>terraform apply</td>
+    <td>CloudFormation stack update</td>
+</tr>
+
+<tr>
+    <td>Terraform state</td>
+    <td>CloudFormation manages stack state</td>
+</tr>
+
+</table>
+
+
+<!-- ========================================================= -->
+<!-- END TO END -->
+<!-- ========================================================= -->
+
+<h2>20. End-to-End AWS Application Example</h2>
+
+<h3>Scenario</h3>
+
+<div class="box">
+
+Suppose a customer sends an HTTP request to an application.
+The application runs on ECS/Fargate, stores information in DynamoDB,
+places asynchronous work into SQS, and processes that work with Lambda.
+
+</div>
+
+
+<h3>Infrastructure Provisioning</h3>
+
+<div class="flow">
+    Git
+    → UrbanCode Provisioning
+    → CloudFormation
+    → VPC
+    → Subnets
+    → Security Groups
+    → IAM
+    → ECR
+    → ECS
+    → ALB
+    → DynamoDB
+    → SQS
+    → Lambda
+    → CloudWatch
+</div>
+
+
+<h3>Application Deployment</h3>
+
+<div class="flow">
+    Code Commit
+    → Build
+    → Test
+    → SonarQube
+    → Fortify
+    → FOSS
+    → Docker Build
+    → Push Image to ECR
+    → ECS Task Definition Revision
+    → ECS Service Update
+    → Fargate Tasks
+    → Health Check
+</div>
+
+
+<h3>Runtime Request Flow</h3>
+
+<div class="flow">
+    Customer
+    → DNS
+    → ALB
+    → ECS/Fargate
+    → Application
+    → DynamoDB
+    → Response
+    → Customer
+</div>
+
+
+<h3>Asynchronous Processing Flow</h3>
+
+<div class="flow">
+    ECS Application
+    → SQS
+    → Lambda
+    → Processing
+    → DynamoDB / S3
+    → CloudWatch
+</div>
+
+
+<h3>Event-Driven Flow</h3>
+
+<div class="flow">
+    AWS/Application Event
+    → EventBridge
+    → Rule
+    → Lambda / SQS / Step Functions
+    → Processing
+    → CloudWatch
+</div>
+
+
+<h3>Batch Processing Flow</h3>
+
+<div class="flow">
+    Application
+    → Submit AWS Batch Job
+    → Job Queue
+    → Scheduler
+    → Compute Environment
+    → ECR Image
+    → Container
+    → Processing
+    → S3 / DynamoDB
+    → CloudWatch
+</div>
+
+
+<h3>Workflow Orchestration Flow</h3>
+
+<div class="flow">
+    Application
+    → Step Functions
+    → Lambda
+    → AWS Batch
+    → DynamoDB
+    → Decision
+    → Success / Failure
+</div>
+
+
+<!-- ========================================================= -->
+<!-- TROUBLESHOOTING -->
+<!-- ========================================================= -->
+
+<h2>21. Common Deployment Troubleshooting Flow</h2>
+
+<div class="flow">
+    Deployment Failed
+    → Check Pipeline Logs
+    → Check AWS Resource Status
+    → Check IAM
+    → Check Network
+    → Check Application Logs
+    → Check CloudWatch
+    → Check Health Checks
+    → Identify Root Cause
+    → Fix
+    → Redeploy
+</div>
+
+
+<h3>ECS Troubleshooting</h3>
+
+<ul>
+    <li>Check ECS service events.</li>
+    <li>Check stopped task reason.</li>
+    <li>Check ECR image and tag.</li>
+    <li>Check execution role.</li>
+    <li>Check task role.</li>
+    <li>Check subnet and route configuration.</li>
+    <li>Check security groups.</li>
+    <li>Check container port.</li>
+    <li>Check ALB target health.</li>
+    <li>Check CloudWatch logs.</li>
+</ul>
+
+
+<h3>Lambda Troubleshooting</h3>
+
+<ul>
+    <li>Check CloudWatch logs.</li>
+    <li>Check timeout.</li>
+    <li>Check memory configuration.</li>
+    <li>Check IAM permissions.</li>
+    <li>Check event payload.</li>
+    <li>Check environment variables.</li>
+    <li>Check VPC connectivity if Lambda is attached to a VPC.</li>
+</ul>
+
+
+<h3>AWS Batch Troubleshooting</h3>
+
+<ul>
+    <li>Check job status.</li>
+    <li>Check job queue.</li>
+    <li>Check compute environment.</li>
+    <li>Check job definition.</li>
+    <li>Check ECR image.</li>
+    <li>Check CPU and memory requirements.</li>
+    <li>Check IAM permissions.</li>
+    <li>Check CloudWatch logs.</li>
+</ul>
+
+
+<h3>CloudFormation Troubleshooting</h3>
+
+<ul>
+    <li>Validate the template before deployment.</li>
+    <li>Check CloudFormation stack events.</li>
+    <li>Find the first resource that failed.</li>
+    <li>Check IAM permissions.</li>
+    <li>Check resource dependencies.</li>
+    <li>Check parameters and resource names.</li>
+    <li>Check whether the resource already exists.</li>
+    <li>Review rollback information.</li>
+</ul>
+
+
+<!-- ========================================================= -->
+<!-- INTERVIEW SUMMARY -->
+<!-- ========================================================= -->
+
+<h2>22. Simple Interview Explanation</h2>
+
+<div class="important">
+
+<strong>How I would explain the overall approach:</strong>
+
+<p>
+"First, the infrastructure is provisioned as code using CloudFormation.
+The stack creates the required AWS resources such as networking, IAM,
+ECR, ECS, load balancing, databases, queues and monitoring."
+</p>
+
+<p>
+"Once the infrastructure is ready, the deployment pipeline builds and tests
+the application, performs code and security scans, creates the application
+artifact or Docker image, pushes the image to ECR and deploys the application
+to the appropriate AWS service."
+</p>
+
+<p>
+"At runtime, the flow depends on the workload. For a web application, the
+request can go through DNS and an ALB to ECS/Fargate. For asynchronous work,
+the application can send messages to SQS. EventBridge can route events to
+Lambda or other targets, while AWS Batch handles batch jobs and Step
+Functions orchestrates multi-step workflows. CloudWatch provides logs,
+metrics and monitoring across the environment."
+</p>
+
+</div>
+
+
+</div>
+
+<a href="#" class="top">↑ Top</a>
+
+</body>
+</html>
