@@ -1,0 +1,54 @@
+<section id="cicd">
+  <h2>1. CI/CD & Jenkins</h2>
+
+  <div class="qa">
+    <h3>Q1. Explain your CI/CD pipeline end to end.</h3>
+
+    <div class="answer">
+      <strong>Answer:</strong>
+      A typical CI/CD pipeline starts when a developer commits code to Git.
+      Jenkins is triggered through a webhook or polling mechanism. The pipeline
+      checks out the code, builds the application, runs unit tests and quality
+      checks, performs security scanning, creates and publishes the artifact or
+      container image, and then deploys it to the appropriate environment.
+
+      After deployment, we perform validation or smoke testing and monitor the
+      application. Promotion to the next environment can require approval.
+      If a deployment causes an issue, we use the previous known-good version
+      for rollback and perform root-cause analysis.
+    </div>
+  </div>
+
+  <div class="qa">
+    <h3>Q2. How do you troubleshoot a failed Jenkins pipeline?</h3>
+
+    <div class="answer">
+      <strong>Answer:</strong>
+      First, I identify the stage where the failure occurred. Then I review
+      the Jenkins console output and stage logs. I check recent code changes,
+      build configuration, environment variables, credentials, agent health,
+      workspace, dependencies and connectivity to external systems such as
+      artifact repositories.
+
+      Once I identify whether the issue is related to source code, build,
+      authentication, infrastructure or deployment, I correct the root cause,
+      rerun the pipeline and validate the result.
+    </div>
+  </div>
+
+  <div class="qa">
+    <h3>Q3. Declarative Pipeline vs Scripted Pipeline?</h3>
+
+    <div class="answer">
+      <strong>Answer:</strong>
+      Declarative Pipeline provides a structured and easier-to-maintain
+      pipeline syntax with defined sections such as stages, steps, agents and
+      post actions.
+
+      Scripted Pipeline provides more flexibility because it uses Groovy
+      programming constructs. I would generally prefer Declarative Pipeline
+      when the workflow can be implemented using its structured syntax, while
+      Scripted Pipeline can be useful when more complex logic is required.
+    </div>
+  </div>
+</section>
