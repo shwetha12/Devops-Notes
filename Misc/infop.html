@@ -1,54 +1,2059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOps Interview Questions & Answers</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        background: #f5f7fa;
+        color: #222;
+    }
+
+    header {
+        background: #1f2937;
+        color: white;
+        padding: 30px 20px;
+        text-align: center;
+    }
+
+    header h1 {
+        margin: 0 0 10px;
+        font-size: 32px;
+    }
+
+    header p {
+        margin: 0;
+        color: #d1d5db;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .toc {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .toc h2 {
+        margin-top: 0;
+    }
+
+    .toc a {
+        display: block;
+        padding: 5px 0;
+        color: #2563eb;
+        text-decoration: none;
+    }
+
+    .toc a:hover {
+        text-decoration: underline;
+    }
+
+    section {
+        margin-bottom: 40px;
+    }
+
+    section > h2 {
+        background: #1f2937;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 24px;
+    }
+
+    .qa {
+        background: white;
+        margin: 15px 0;
+        padding: 20px 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+    }
+
+    .qa h3 {
+        margin-top: 0;
+        color: #111827;
+        font-size: 18px;
+    }
+
+    .answer {
+        color: #374151;
+    }
+
+    .answer strong {
+        color: #111827;
+    }
+
+    pre {
+        background: #111827;
+        color: #e5e7eb;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+
+    code {
+        font-family: Consolas, Monaco, monospace;
+    }
+
+    .tip {
+        background: #eff6ff;
+        border-left: 4px solid #2563eb;
+        padding: 12px 15px;
+        margin-top: 12px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 30px;
+        color: #6b7280;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>DevOps Interview Questions & Answers</h1>
+    <p>CI/CD • Jenkins • Kubernetes • Docker • Terraform • AWS • Git • Linux • DevSecOps</p>
+</header>
+
+<div class="container">
+
+<div class="toc">
+<h2>Sections</h2>
+<a href="#cicd">1. CI/CD & Jenkins</a>
+<a href="#kubernetes">2. Kubernetes</a>
+<a href="#docker">3. Docker</a>
+<a href="#terraform">4. Terraform / Infrastructure as Code</a>
+<a href="#aws">5. AWS / Cloud</a>
+<a href="#monitoring">6. Monitoring / Production Troubleshooting</a>
+<a href="#git">7. Git</a>
+<a href="#linux">8. Linux / Scripting</a>
+<a href="#security">9. Security / DevSecOps</a>
+<a href="#project">10. Project / Experience</a>
+</div>
+
+
+<!-- ========================================================= -->
+<!-- 1. CI/CD & JENKINS -->
+<!-- ========================================================= -->
+
 <section id="cicd">
-  <h2>1. CI/CD & Jenkins</h2>
+<h2>1. CI/CD & Jenkins</h2>
 
-  <div class="qa">
-    <h3>Q1. Explain your CI/CD pipeline end to end.</h3>
+<div class="qa">
+<h3>Q1. Explain your current CI/CD pipeline.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A typical flow starts when developers commit code to Git. Jenkins is triggered through a webhook or another configured trigger. The pipeline checks out the code, performs the build and testing, runs quality and security checks, publishes artifacts, and then proceeds with deployment. In my environment, Jenkins was also used to drive Kubernetes deployment workflows through DME and support Spinnaker deployments. After deployment, we validate the application and monitor it. If there is an issue, we investigate the logs and either correct the problem or roll back to the previous known-good version.
+</div>
+</div>
 
-    <div class="answer">
-      <strong>Answer:</strong>
-      A typical CI/CD pipeline starts when a developer commits code to Git.
-      Jenkins is triggered through a webhook or polling mechanism. The pipeline
-      checks out the code, builds the application, runs unit tests and quality
-      checks, performs security scanning, creates and publishes the artifact or
-      container image, and then deploys it to the appropriate environment.
+<div class="qa">
+<h3>Q2. If you had to set up a CI/CD pipeline from scratch, how would you do it?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+First I would understand the application build process, deployment target, environments and release requirements. Then I would configure source control integration, build and test stages, code-quality and security checks, artifact or container-image creation, artifact storage, deployment stages, approvals and monitoring. I would keep environment-specific configuration outside the application code and use secure credential management. Finally, I would add rollback and notification mechanisms.
+</div>
+</div>
 
-      After deployment, we perform validation or smoke testing and monitor the
-      application. Promotion to the next environment can require approval.
-      If a deployment causes an issue, we use the previous known-good version
-      for rollback and perform root-cause analysis.
-    </div>
-  </div>
+<div class="qa">
+<h3>Q3. What tools would you use to build the CI/CD pipeline?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The exact tools depend on the organization. A common stack could be Git or GitHub for source control, Jenkins or GitLab CI for pipelines, Maven or Gradle for builds, Artifactory for artifacts, Docker for containerization, Kubernetes for deployment, Helm for packaging, Terraform for infrastructure, SonarQube for quality checks, security scanners for vulnerabilities, and Grafana or another monitoring platform for observability.
+</div>
+</div>
 
-  <div class="qa">
-    <h3>Q2. How do you troubleshoot a failed Jenkins pipeline?</h3>
+<div class="qa">
+<h3>Q4. What happens after a code commit?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A webhook or polling mechanism triggers the CI pipeline. Jenkins checks out the required branch and commit, runs the build and tests, performs quality and security checks, publishes the artifact or image, and then deploys it if all required gates pass. Depending on the environment, promotion to the next stage may require approval.
+</div>
+</div>
 
-    <div class="answer">
-      <strong>Answer:</strong>
-      First, I identify the stage where the failure occurred. Then I review
-      the Jenkins console output and stage logs. I check recent code changes,
-      build configuration, environment variables, credentials, agent health,
-      workspace, dependencies and connectivity to external systems such as
-      artifact repositories.
+<div class="qa">
+<h3>Q5. Explain the build → Docker image → deployment flow.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The pipeline first checks out the source code and builds the application. The resulting application artifact is included in a Docker image using a Dockerfile. The image is tagged with a meaningful version or commit identifier and pushed to an image repository. Kubernetes then pulls that image and deploys it using a Deployment, Helm chart, or another deployment mechanism. After deployment, readiness and application health are validated.
+</div>
+</div>
 
-      Once I identify whether the issue is related to source code, build,
-      authentication, infrastructure or deployment, I correct the root cause,
-      rerun the pipeline and validate the result.
-    </div>
-  </div>
+<div class="qa">
+<h3>Q6. What Jenkins strategy did you use?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I worked with Jenkins-based CI/CD automation where Jenkins pipelines were used to build and deploy applications. My role included monitoring pipeline execution, analyzing failures, checking stage configuration and logs, and supporting deployment workflows. I also worked with Jenkins/Groovy-driven Kubernetes workflows that interacted with DME APIs and supported Spinnaker deployments.
+</div>
+</div>
 
-  <div class="qa">
-    <h3>Q3. Declarative Pipeline vs Scripted Pipeline?</h3>
+<div class="qa">
+<h3>Q7. What type of Jenkins pipeline did you use?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I have worked with Jenkins pipelines that use structured stages for activities such as checkout, build, validation and deployment. I have also supported Groovy-based Jenkins workflows. I would describe my experience primarily as supporting and troubleshooting Jenkins automation rather than claiming extensive Groovy application development.
+</div>
+</div>
 
-    <div class="answer">
-      <strong>Answer:</strong>
-      Declarative Pipeline provides a structured and easier-to-maintain
-      pipeline syntax with defined sections such as stages, steps, agents and
-      post actions.
+<div class="qa">
+<h3>Q8. What is the basic Jenkins CI/CD workflow?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Source code is committed, Jenkins is triggered, code is checked out, the application is built and tested, quality and security checks are performed, artifacts or images are published, and deployment is performed. After deployment, smoke tests and monitoring confirm the release.
+</div>
+</div>
 
-      Scripted Pipeline provides more flexibility because it uses Groovy
-      programming constructs. I would generally prefer Declarative Pipeline
-      when the workflow can be implemented using its structured syntax, while
-      Scripted Pipeline can be useful when more complex logic is required.
-    </div>
-  </div>
+<div class="qa">
+<h3>Q9. How do you troubleshoot a failed Jenkins pipeline?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I first identify the failed stage and review the console output. Then I check recent code changes, pipeline configuration, environment variables, credentials, agent availability, workspace problems, dependencies and connectivity to external systems. I determine whether the failure is related to code, build, infrastructure, authentication or deployment. After fixing the root cause, I rerun the appropriate stage or pipeline and validate the result.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q10. How do you integrate Jenkins with a Kubernetes cluster?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Jenkins can communicate with Kubernetes using credentials and the Kubernetes API. Depending on the setup, Jenkins can use Kubernetes agents or execute kubectl/Helm commands from an authorized build agent. Access should be limited using appropriate Kubernetes RBAC permissions. The pipeline then deploys manifests or Helm releases and validates the rollout.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q11. How can you communicate with a Jenkins server running on Kubernetes?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would first identify how Jenkins is exposed. It could be through an Ingress, LoadBalancer or internal Service. For troubleshooting, I would inspect the Jenkins Pod and Service:
+<pre><code>kubectl get pods -n jenkins
+kubectl get svc -n jenkins
+kubectl logs &lt;jenkins-pod&gt; -n jenkins
+</code></pre>
+If necessary, port-forwarding can be used for temporary access.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q12. How do you pull code from GitHub through Jenkins?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The Jenkins job is configured with the Git repository URL and credentials if the repository is private. Jenkins checks out the requested branch or commit using the Git plugin or pipeline checkout step. For secure environments, I prefer credentials stored in Jenkins rather than hard-coded in the Jenkinsfile.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q13. Which Jenkins plugins would you install?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The plugins depend on the architecture. Common examples include Git, Pipeline, Credentials Binding, Docker-related plugins, Kubernetes integration, artifact repository integrations, SCM/webhook integrations and notification plugins. I would avoid installing unnecessary plugins because plugins increase the maintenance and security surface.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q14. Where do you configure Docker credentials in Jenkins?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would store them in Jenkins Credentials rather than directly in the Jenkinsfile. A pipeline can reference the credential by its ID and use it during the Docker login or image-push stage. Access should be restricted to the jobs that require it.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q15. How do you authenticate GitHub with Jenkins?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+For private repositories, Jenkins can use a personal access token, SSH key or an appropriate application-based integration. The credential is stored securely in Jenkins Credentials and referenced by the job. Webhooks can be configured so GitHub notifies Jenkins when changes are pushed.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q16. How do you deploy an application to Kubernetes using a pipeline?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The pipeline first creates or obtains the application image. Then it authenticates to the target Kubernetes cluster and applies manifests or executes a Helm deployment. For example:
+<pre><code>kubectl apply -f deployment.yaml
+kubectl rollout status deployment/myapp
+</code></pre>
+With Helm:
+<pre><code>helm upgrade --install myapp ./chart -f values-prod.yaml
+</code></pre>
+Finally, I validate Pods, Services, events and application health.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q17. What stages have you used in your CI/CD pipeline?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Typical stages include checkout, build, unit testing, code quality, security scanning, packaging, artifact publishing, deployment and post-deployment validation. Depending on the application, additional stages can include database migration, approval and notification.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q18. Which deployment strategies have you used?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Common strategies include rolling deployment, blue-green deployment and canary deployment. Kubernetes Deployments commonly use rolling updates. The appropriate strategy depends on application requirements, risk tolerance and whether traffic can be controlled between versions.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q19. How do you perform a zero-downtime deployment?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use multiple application replicas, readiness probes, a Service or load balancer and a rolling-update strategy. Kubernetes gradually replaces old Pods while ensuring new Pods are ready. I would also configure appropriate maxUnavailable and maxSurge values and validate application health during the rollout.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q20. How would you roll back a failed production deployment?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+First I would confirm the failure and assess impact. If the previous version is known to be healthy, I would roll back to it using the deployment mechanism. With Kubernetes:
+<pre><code>kubectl rollout history deployment/myapp
+kubectl rollout undo deployment/myapp
+kubectl rollout status deployment/myapp
+</code></pre>
+Then I would monitor the application and perform RCA separately.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q21. Declarative vs Scripted Jenkins pipeline?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Declarative Pipeline provides a structured syntax with sections such as pipeline, agent, stages, steps and post. Scripted Pipeline provides more programming flexibility through Groovy. I prefer Declarative Pipeline when the workflow fits its structure because it is generally easier to read and maintain.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q22. How do you manage Jenkins credentials/secrets?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I store credentials in Jenkins Credentials or an integrated secret-management system. Pipelines reference credentials by ID and should never print them. Permissions should be restricted, secrets should be rotated, and sensitive values should not be committed to source control.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q23. How do you integrate Git/GitHub with Jenkins?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I configure the repository URL, branch and credentials in Jenkins and use webhooks to trigger builds. Jenkins checks out the required revision and executes the pipeline. Pull-request validation can also be configured depending on the repository workflow.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q24. Webhook vs Poll SCM?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+With a webhook, the source-control system notifies Jenkins when a change occurs. Poll SCM means Jenkins periodically checks the repository for changes. Webhooks are generally more efficient because they trigger the pipeline closer to the actual commit time without constant polling.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q25. How do you implement approval before production?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would place a manual approval gate between the staging and production stages. The approval should be associated with the release/change process and restricted to authorized users. The pipeline proceeds only after approval.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q26. How do you deploy to multiple environments—Dev → QA → Stage → Prod?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would promote the same tested artifact across environments rather than rebuilding different artifacts. Environment-specific configuration is injected through configuration files, Helm values, variables or secret management. Each environment has appropriate validation and, where required, approval gates.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q27. How do you implement rollback?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Rollback should be designed before deployment. I keep the previous known-good application version available and use the deployment platform to restore it. For Kubernetes, rollout history and rollout undo can be used. For database changes, backward-compatible migration strategies should also be considered.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q28. How do you add quality gates to Jenkins?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would integrate tools such as SonarQube into the pipeline and define thresholds for quality or security findings. The pipeline should fail or stop promotion when the configured gate is not met. This prevents poor-quality code from moving to later environments.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q29. How do you run stages in parallel?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Independent activities such as unit tests, static analysis and certain security checks can run in parallel. In a Declarative Pipeline, the parallel construct can be used:
+<pre><code>stage('Checks') {
+    parallel {
+        stage('Unit Test') {
+            steps {
+                sh './run-tests.sh'
+            }
+        }
+        stage('Quality') {
+            steps {
+                sh './quality-check.sh'
+            }
+        }
+    }
+}
+</code></pre>
+</div>
+</div>
+
+<div class="qa">
+<h3>Q30. How do you troubleshoot a pipeline that worked yesterday but fails today?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I compare what changed since the last successful run. I check source changes, dependency versions, agent availability, credentials, certificates, external services, disk space, network connectivity and tool versions. I compare the failing logs with the previous successful build to isolate the change.
+</div>
+</div>
 </section>
+
+
+<!-- ========================================================= -->
+<!-- 2. KUBERNETES -->
+<!-- ========================================================= -->
+
+<section id="kubernetes">
+<h2>2. Kubernetes</h2>
+
+<div class="qa">
+<h3>Q31. Explain Kubernetes architecture.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Kubernetes has a control plane and worker nodes. The control plane includes the API server, scheduler, controller manager and etcd. Worker nodes run components such as kubelet, kube-proxy and the container runtime. The API server is the main interface, the scheduler places Pods on nodes, controllers maintain desired state and etcd stores cluster state.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q32. You have a Pod in CrashLoopBackOff. How would you debug it?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I first inspect the Pod:
+<pre><code>kubectl get pod &lt;pod&gt;
+kubectl describe pod &lt;pod&gt;
+kubectl logs &lt;pod&gt;
+kubectl logs &lt;pod&gt; --previous
+</code></pre>
+I check container exit codes, events, probes, environment variables, mounted configuration, Secrets, resource limits and application logs. If the container is restarting, <code>--previous</code> is particularly useful.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q33. The Pod is in CrashLoopBackOff, but the logs show no error. What would you check?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check Pod events, exit codes, liveness/readiness probes, container command and arguments, resource limits, mounted ConfigMaps and Secrets, and whether the application is terminating normally. I would also use <code>kubectl describe pod</code> and check previous-container logs.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q34. How would you troubleshoot ImagePullBackOff?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would run:
+<pre><code>kubectl describe pod &lt;pod&gt;
+</code></pre>
+and inspect the Events section. I would verify the image name, tag, registry connectivity and imagePullSecrets. I would also check whether the image exists and whether the Kubernetes identity has permission to pull it.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q35. What are the possible causes of ImagePullBackOff?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Common causes include an incorrect image name or tag, image not existing in the registry, authentication failure, missing imagePullSecret, registry connectivity problems, network restrictions or registry rate limits.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q36. Given Kubernetes Pod information, identify the problematic Pod and explain your investigation.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would look for non-running states such as CrashLoopBackOff, ImagePullBackOff, Pending or repeated restarts. Then I would inspect the specific Pod with <code>kubectl describe pod</code>, review events and logs, check resource availability, configuration, probes, image information and dependencies. I would compare it with a healthy Pod from the same workload.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q37. What YAML files are required to deploy a three-tier application?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A typical three-tier application may have separate Deployments and Services for the frontend, backend and database. Additional YAML may include ConfigMaps, Secrets, PersistentVolumeClaims and Ingress. The exact set depends on the architecture.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q38. What YAML files are required to host an application?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+At minimum, an application commonly needs a Deployment and Service. Depending on requirements, it may also need ConfigMap, Secret, Ingress, PersistentVolumeClaim, ServiceAccount and autoscaling resources.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q39. What is the difference between Ingress and Service?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A Service provides stable networking and load balancing to Pods. Ingress provides HTTP/HTTPS routing from outside the cluster to Services, usually based on hostnames or URL paths. An Ingress requires an Ingress Controller to actually implement the routing.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q40. How would you implement URL/path-based routing in Kubernetes?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would create an Ingress with path rules that route different URL paths to different Services. For example, <code>/api</code> can route to the backend Service while <code>/</code> routes to the frontend Service.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q41. What happens when a Kubernetes Pod becomes unhealthy?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+If the readiness probe fails, Kubernetes removes the Pod from Service endpoints so it stops receiving traffic. If the liveness probe fails repeatedly, Kubernetes restarts the container. Controllers such as Deployments ensure the desired number of replicas continues to exist.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q42. How does Kubernetes recover an unhealthy Pod?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Kubernetes uses probes and controllers. A failed liveness probe can restart a container. If a Pod is terminated, a Deployment or ReplicaSet creates a replacement to maintain the desired replica count.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q43. What are the Kubernetes worker-node components?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The main components are kubelet, kube-proxy and the container runtime. Kubelet manages Pods on the node, kube-proxy supports Service networking, and the container runtime runs the containers.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q44. What is imagePullPolicy?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+It controls when Kubernetes attempts to pull the container image. Common values are Always, IfNotPresent and Never. For tags such as <code>latest</code>, Kubernetes commonly defaults to Always. In production, immutable versioned image tags are preferable.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q45. What challenges have you encountered during a Kubernetes upgrade?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Typical challenges include API-version compatibility, application compatibility, node upgrades, admission controllers, ingress components, Helm charts and third-party integrations. I would review release notes, validate workloads in a lower environment, back up important configuration and perform post-upgrade validation.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q46. What checks do you perform after a Kubernetes upgrade?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I check node health, control-plane health where applicable, system Pods, application Pods, Services, Ingress, events, workloads, networking, storage and monitoring. I also validate critical application flows.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q47. How do you verify that everything is working after a Kubernetes upgrade?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I check:
+<pre><code>kubectl get nodes
+kubectl get pods -A
+kubectl get events -A
+kubectl get svc -A
+</code></pre>
+Then I validate application endpoints, logs, metrics, ingress routing and critical business transactions.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q48. Managed nodes vs self-managed nodes?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+With managed node groups, the cloud provider handles much of the node lifecycle and integration. Self-managed nodes provide more control but require more operational responsibility for provisioning, upgrades, patching and lifecycle management.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q49. Have you created a Kubernetes cluster? Explain the steps.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+For a managed Kubernetes platform, the general process is to create the cluster control plane, configure networking and IAM/access, create node groups, configure add-ons and then deploy workloads. My experience has primarily involved working with Kubernetes/EKS environments, supporting deployments, troubleshooting and environment-level issues rather than claiming that I independently designed every cluster from scratch.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q50. What are the different ways to create a Kubernetes cluster?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Clusters can be created using managed services such as EKS, AKS or GKE, using tools such as kubeadm for self-managed clusters, or through infrastructure automation platforms and Terraform modules.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q51. How do you configure Kubernetes autoscaling?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Horizontal Pod Autoscaler scales Pod replicas based on metrics such as CPU or memory. Cluster Autoscaler adjusts node capacity when Pods cannot be scheduled because of insufficient resources. Vertical Pod Autoscaler can recommend or adjust resource requests depending on configuration.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q52. How many Kubernetes clusters are you currently managing?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would answer this based on the actual number in my current environment. A safe format is: "I support multiple Kubernetes environments across development and production. My responsibilities include deployment support, troubleshooting, configuration validation and coordination with platform teams."
+</div>
+</div>
+
+<div class="qa">
+<h3>Q53. Why isn't Cluster Autoscaler scaling up even though Pods are Pending?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check why the Pod is Pending and review Cluster Autoscaler logs. I would check node-group min/max limits, instance availability, resource requests, taints/tolerations, node selectors, affinity rules and cloud-provider permissions. The important point is that a Pending Pod must be unschedulable for a reason that Cluster Autoscaler can address.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q54. HPA vs VPA?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+HPA changes the number of Pod replicas. VPA adjusts or recommends CPU and memory resource requests for Pods. HPA is commonly used for horizontal scaling based on workload demand, while VPA addresses resource sizing.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q55. During peak traffic, the Ingress Controller isn't routing requests efficiently. How would you diagnose it?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check Ingress configuration, controller logs, controller CPU/memory, replica count, Service endpoints, backend Pod health and application response time. I would also check load-balancer metrics, connection limits, DNS and network behavior.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q56. How would you troubleshoot Kubernetes when Pods are healthy but users are receiving errors?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would trace the request path from client to DNS, load balancer, Ingress, Service and Pod. I would check endpoints, ports, routing rules, TLS, application logs and dependency connectivity. Healthy Pods only prove that the containers are running; they do not guarantee the complete request path is working.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q57. Deployment vs StatefulSet vs DaemonSet.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Deployment is commonly used for stateless applications. StatefulSet is used when workloads need stable identity or persistent storage characteristics. DaemonSet ensures a Pod runs on each applicable node, commonly for agents such as logging or monitoring components.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q58. Service types: ClusterIP, NodePort, LoadBalancer.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+ClusterIP provides internal cluster access. NodePort exposes a Service through a port on each node. LoadBalancer integrates with a cloud load-balancing service and provides external access when supported by the environment.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q59. Readiness vs liveness probe.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Readiness determines whether a Pod should receive traffic. Liveness determines whether the container should be restarted because it is considered unhealthy. A readiness failure does not necessarily restart the container.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q60. PV vs PVC.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A PersistentVolume represents storage available to the cluster. A PersistentVolumeClaim is a request for storage made by a workload. Kubernetes binds a suitable PV to the PVC based on requirements.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q61. ConfigMap vs Secret.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+ConfigMap stores non-sensitive configuration. Secret is intended for sensitive information such as credentials or tokens. Secrets still need appropriate access controls and secure handling; they should not be treated as automatically encrypted simply because the resource type is Secret.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q62. How do you perform a zero-downtime Kubernetes deployment?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use multiple replicas, readiness probes and rolling updates. The new Pods must become ready before old Pods are removed. I also validate the rollout and monitor application behavior:
+<pre><code>kubectl rollout status deployment/myapp
+kubectl get pods
+</code></pre>
+</div>
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- 3. DOCKER -->
+<!-- ========================================================= -->
+
+<section id="docker">
+<h2>3. Docker</h2>
+
+<div class="qa">
+<h3>Q63. What is Docker and why is it used?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Docker packages an application and its dependencies into a container image. Containers provide consistent execution environments across development, testing and production. Docker is widely used in CI/CD because images can be built, scanned, stored and deployed consistently.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q64. What is a Docker container?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A container is a running instance of an image. It provides process isolation while sharing the host operating system kernel. Containers are generally lightweight and can be started and stopped quickly.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q65. How do you check whether a container is running?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use:
+<pre><code>docker ps
+docker ps -a
+</code></pre>
+I can also inspect logs and container details:
+<pre><code>docker logs &lt;container&gt;
+docker inspect &lt;container&gt;
+</code></pre>
+</div>
+</div>
+
+<div class="qa">
+<h3>Q66. How would you optimize a large Docker image?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use a smaller base image, multi-stage builds, a proper .dockerignore file, fewer layers where appropriate and avoid unnecessary packages. Build dependencies should not remain in the final runtime image.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q67. You have frontend, backend and database components. Would you use one Dockerfile or separate Dockerfiles?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would normally use separate images and Dockerfiles because the frontend, backend and database have different responsibilities and dependencies. The database would often be provided by a managed database service in production rather than packaged as part of the application image.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q68. Where would you store Docker images?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use a container registry such as Amazon ECR, Azure Container Registry, Google Artifact Registry, Docker Hub or an enterprise registry such as Artifactory, depending on the organization.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q69. A Docker container starts and then exits. How do you troubleshoot?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would inspect logs and the container exit code:
+<pre><code>docker logs &lt;container&gt;
+docker inspect &lt;container&gt;
+docker ps -a
+</code></pre>
+I would verify the CMD/ENTRYPOINT, required environment variables, configuration files and whether the application process is actually designed to remain running.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q70. Docker image vs container.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+An image is an immutable package containing the application and its dependencies. A container is a running or stopped instance created from that image.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q71. Docker CMD vs ENTRYPOINT.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+ENTRYPOINT defines the main executable, while CMD provides default arguments or a default command. They can be combined so the ENTRYPOINT remains fixed while CMD supplies default parameters.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q72. How do you reduce Docker image size?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Use a suitable minimal base image, multi-stage builds, .dockerignore, remove unnecessary packages and files, and keep build tools out of the final image.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q73. How do you handle Docker images as part of your CI/CD pipeline?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The pipeline builds the image, tags it with a unique version, scans it, authenticates to the registry and pushes it. The deployment references the immutable image tag. I avoid relying on mutable tags such as <code>latest</code> for controlled production releases.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q74. How do you handle Docker image security/scanning?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would scan images for known vulnerabilities before publishing or deploying them. I would also use trusted base images, minimize installed packages, avoid secrets in images and regularly update dependencies.
+</div>
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- 4. TERRAFORM -->
+<!-- ========================================================= -->
+
+<section id="terraform">
+<h2>4. Terraform / Infrastructure as Code</h2>
+
+<div class="qa">
+<h3>Q75. Why do we use Terraform?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Terraform allows infrastructure to be defined as code, reviewed through source control and provisioned consistently. It supports reusable modules, dependency management and multiple cloud providers.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q76. Why choose Terraform instead of AWS CloudFormation?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Terraform is cloud-agnostic and provides a common workflow across AWS, Azure, GCP and other platforms. CloudFormation is deeply integrated with AWS. If an organization is AWS-only, CloudFormation can be a strong choice; Terraform is attractive when portability and a common IaC workflow are important.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q77. How do you use Terraform to deploy infrastructure?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I define infrastructure in Terraform configuration, initialize the working directory, validate and plan the changes, review the plan and then apply it:
+<pre><code>terraform init
+terraform fmt
+terraform validate
+terraform plan
+terraform apply
+</code></pre>
+</div>
+</div>
+
+<div class="qa">
+<h3>Q78. What infrastructure have you built using Terraform?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My experience includes working with Terraform-based automation and templates used as part of application onboarding and environment provisioning. I would describe my role accurately as supporting and validating Terraform-driven provisioning rather than claiming ownership of every infrastructure component.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q79. Which AWS resources have you deployed with Terraform?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Examples include VPC-related networking resources, subnets, route tables, security groups, IAM components, compute resources and EKS-related infrastructure. The exact resources should be stated based on what I personally worked with.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q80. What is Infrastructure as Code?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Infrastructure as Code means defining infrastructure using machine-readable configuration rather than manually creating resources. It makes infrastructure repeatable, reviewable and easier to automate.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q81. What are the benefits of IaC?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Benefits include consistency, repeatability, version control, automation, peer review, easier recovery and reduced manual configuration errors.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q82. What is the purpose of the Terraform state file?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Terraform state maps Terraform configuration to real infrastructure resources. Terraform uses it to determine what resources exist and what changes are required during planning.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q83. What is a Terraform backend?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A backend determines where Terraform stores state and how state operations are handled. For example, an S3 backend can store state remotely and support locking through an appropriate locking mechanism.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q84. Why do we use a Terraform backend?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Remote backends allow teams to share state safely instead of storing state only on an individual workstation. They can provide access control, versioning, encryption and state locking depending on the backend.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q85. How do you secure a Terraform state file?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use a remote backend with encryption, restricted IAM access, versioning and state locking where supported. I also avoid storing sensitive values unnecessarily and restrict access to the state because it can contain sensitive information.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q86. How do you handle conflicts when multiple people modify infrastructure using Terraform?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Use remote state and locking, source control and a controlled workflow. Developers should create branches and review Terraform changes through pull requests. Only one apply should modify a state at a time when locking is enabled.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q87. How do you handle Terraform state locking?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use a backend that supports state locking. Before an apply, Terraform obtains the lock. Other operations that would modify the same state should wait or fail rather than simultaneously modifying the state.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q88. What happens if the Terraform state stored in S3 is accidentally deleted?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The infrastructure still exists, but Terraform may lose its mapping between configuration and real resources. If state versioning is enabled, I would restore the appropriate previous state version. I would not immediately run apply because Terraform could interpret existing infrastructure as missing and attempt to recreate resources.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q89. How would you recover the Terraform state?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+If the backend supports versioning, restore the last known-good state version. If necessary, resources can be re-imported into Terraform state, but that requires careful mapping of configuration to existing infrastructure.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q90. How would you prevent accidental Terraform-state deletion?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Enable state versioning, encryption, restricted IAM permissions and deletion protection where applicable. I would also use a dedicated state bucket and monitor administrative changes.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q91. How do you import an existing VPC into Terraform?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+First I define the corresponding resource in Terraform configuration. Then I import the existing resource into state:
+<pre><code>terraform import aws_vpc.main vpc-12345678
+</code></pre>
+After import, I run plan and update the configuration so it accurately represents the existing resource.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q92. What are Terraform providers?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Providers are plugins that allow Terraform to interact with APIs. Examples include AWS, Azure and Google Cloud providers. Providers expose resources and data sources that Terraform can manage.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q93. What happens to providers after terraform init?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Terraform downloads or initializes the required provider plugins and prepares the working directory. Provider versions are typically tracked through the dependency lock file.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q94. Can Terraform use multiple providers?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Yes. Terraform can use multiple providers in the same configuration. For example, infrastructure could use AWS resources along with another provider. Provider aliases can be used when multiple configurations of the same provider are required.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q95. What are Terraform meta-arguments?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Common meta-arguments include <code>count</code>, <code>for_each</code>, <code>depends_on</code>, <code>provider</code> and <code>lifecycle</code>. They control how Terraform creates and manages resources.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q96. count vs for_each?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+count creates multiple instances based on a numeric count and uses numeric indexes. for_each creates instances based on a map or set and provides stable keys. for_each is often preferable when each resource needs a meaningful identity.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q97. What is Terraform indexing?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Resources created with count use numeric indexes such as <code>resource.example[0]</code>. Resources created with for_each use keys such as <code>resource.example["prod"]</code>.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q98. What are Terraform modules?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A module is a reusable collection of Terraform resources and configuration. Modules help standardize infrastructure patterns and reduce duplication.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q99. Why do you use Terraform modules?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Modules provide reusable patterns, consistency and easier maintenance. For example, an organization can have a standard VPC or EKS module and pass environment-specific variables to it.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q100. What are Terraform workspaces?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Workspaces allow multiple Terraform state instances to be associated with the same configuration. They can be useful for certain environment patterns, although many teams prefer separate configurations or state backends for strong environment isolation.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q101. What is Terraform drift?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Drift occurs when real infrastructure differs from what Terraform configuration and state expect, often because someone manually changed the resource outside Terraform.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q102. A resource was manually changed in AWS but Terraform shows drift. What would you do?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would review the plan to understand the difference and determine whether the manual change was intentional. If Terraform should own the setting, I would update the configuration if necessary and apply the desired state. I would avoid blindly applying changes until I understand the impact.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q103. How do you safely deploy Terraform infrastructure changes to production?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use source control, pull-request review, validation, Terraform plan, automated checks and approval before apply. The plan should be reviewed for destructive changes. Production applies should use controlled credentials and remote state locking.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q104. What is immutable infrastructure in Terraform?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Immutable infrastructure means replacing resources rather than modifying them in place when changes require a new version. This makes environments more predictable and reduces configuration drift.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q105. How does Terraform support immutability?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Terraform compares desired and actual state and can replace resources when a change requires replacement. Lifecycle settings such as create_before_destroy can sometimes help reduce downtime.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q106. What happens if terraform apply fails halfway?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Terraform records successful changes in state as the operation progresses. Some resources may have been created while others failed. I would review the error, state and plan rather than manually guessing what exists. Then I would correct the root cause and run plan again.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q107. How do you manage Terraform secrets?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I avoid hard-coding secrets in Terraform files. Secrets should come from a secure secret manager or CI/CD credential store. State must also be protected because sensitive values can sometimes appear there.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q108. How would you structure Terraform for Dev/QA/Prod?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use reusable modules with separate environment configurations and separate state. Environment-specific variables would be maintained independently while the reusable infrastructure logic stays centralized.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q109. How do you test Terraform before production?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use formatting, validation, plan review, static analysis and policy checks. Changes should go through source-control review and a lower environment where practical before production.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q110. How do you manage Terraform state in a team environment?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Use a remote backend, encryption, restricted permissions, state locking, versioning and source control. Production applies should run through an approved CI/CD process rather than individual unmanaged workstations.
+</div>
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- 5. AWS -->
+<!-- ========================================================= -->
+
+<section id="aws">
+<h2>5. AWS / Cloud</h2>
+
+<div class="qa">
+<h3>Q111. What AWS services have you worked with?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My experience includes AWS and Kubernetes environments, particularly EKS-related deployments and troubleshooting. Depending on the project, relevant services include EC2, VPC, IAM, load balancers, Route 53, CloudWatch, S3, RDS and EKS.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q112. What is the CIDR range of your subnet?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+The exact CIDR depends on the environment. CIDR defines the network address range and prefix length. For example, <code>10.0.1.0/24</code> provides a range of addresses within the 10.0.1.0 network.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q113. How many route tables can a subnet be associated with?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A subnet can be associated with only one route table at a time. A route table can be associated with multiple subnets.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q114. Would you modify an existing route table or create a new one? Why?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would first understand whether the routing requirement applies to the existing group of subnets. If the desired route is common to those subnets, modifying the existing table may be appropriate. If the routing behavior needs to be isolated, I would create a separate route table.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q115. What would you do if the existing route table doesn't allow the required modification?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would determine the specific restriction and desired routing behavior. If necessary, I would create a new route table, associate it with the relevant subnet and validate the resulting network path.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q116. Difference between public and private subnets?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A public subnet has a route to an Internet Gateway. Resources can have public connectivity if they also have the required public addressing and security configuration. Private subnets do not have a direct route to the Internet Gateway and commonly use a NAT Gateway for outbound Internet access.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q117. Where are public/private subnets used?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Public subnets are commonly used for internet-facing load balancers or other resources that need public connectivity. Private subnets are commonly used for application servers, Kubernetes worker nodes and databases.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q118. How does routing work?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A route table determines where network traffic should be sent based on destination CIDR. AWS evaluates the applicable route and forwards traffic to the configured target such as a local network, Internet Gateway, NAT Gateway, transit gateway or other target.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q119. What is AWS Organizations?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+AWS Organizations allows an organization to centrally manage multiple AWS accounts. It supports account grouping, centralized policies, governance and consolidated billing.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q120. What is an SCP?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A Service Control Policy is an AWS Organizations policy that sets the maximum available permissions for accounts or organizational units. It does not itself grant permissions; IAM policies must still grant the required permissions.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q121. Can an SCP contain Allow and Deny statements?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+SCPs support Allow and Deny statements, but an SCP does not grant permissions by itself. Effective permissions require both an applicable SCP allowing the action and IAM permissions granting it.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q122. How do you secure an AWS environment?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use least-privilege IAM, MFA, restricted network access, encryption, centralized logging, security monitoring, patching, secrets management, resource tagging and infrastructure-as-code controls. Production access should be tightly controlled and audited.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q123. Which AWS security/compliance tools do you use?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Depending on the environment, tools can include IAM, CloudTrail, CloudWatch, GuardDuty, Security Hub, AWS Config and KMS. The exact tools should match the organization's security architecture.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q124. Explain CloudWatch.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+CloudWatch provides metrics, logs, alarms and monitoring for AWS resources and applications. It can be used to monitor CPU, network activity, application logs and custom metrics and to trigger alerts or automated actions.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q125. Explain Route 53.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Route 53 is AWS's DNS service. It supports hosted zones, DNS records, health checks and routing policies such as weighted, latency-based and failover routing.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q126. Explain Load Balancer.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A load balancer distributes client requests across healthy backend targets. In AWS, Application Load Balancers operate at the HTTP/HTTPS layer while Network Load Balancers operate at the transport layer and support high-performance TCP/UDP workloads.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q127. How do you monitor AWS resources?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use CloudWatch metrics and logs, alarms, application monitoring and centralized dashboards. Depending on the environment, Grafana can also visualize metrics from AWS and Kubernetes.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q128. How do you configure Auto Scaling?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+For EC2, I would configure an Auto Scaling Group with minimum, desired and maximum capacity and define scaling policies based on metrics such as CPU or request count. For Kubernetes, I would use HPA and, where required, Cluster Autoscaler.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q129. What happens if an Auto Scaling Group doesn't launch instances during traffic spikes?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check scaling activity history, CloudWatch metrics and alarms, launch-template configuration, subnet capacity, security groups, IAM permissions, instance availability and service quotas. I would also check whether the desired capacity has actually changed.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q130. An application behind an ALB returns HTTP 503. How do you troubleshoot?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check target health, target-group configuration, listener rules and application availability. Then I would verify that the backend Pods or instances are listening on the expected port and that security groups and networking allow traffic. ALB access logs and application logs can help identify the issue.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q131. Users report slow application performance. Which AWS services/metrics do you check?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check ALB latency, target response time, EC2 CPU/memory where available, network metrics, database performance, application logs and Kubernetes resource utilization. I would correlate the timing with recent deployments or traffic changes.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q132. An RDS database becomes unavailable. What is your recovery approach?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+First I would determine whether it is an AWS service issue, database failure, network problem or application connectivity problem. I would check RDS status, events, CloudWatch metrics, connectivity and security groups. If recovery is required, I would use the configured Multi-AZ, failover, snapshot or backup strategy according to the organization's recovery plan.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q133. How do you perform a zero-downtime deployment in AWS?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use multiple healthy instances or Pods behind a load balancer and gradually replace the old version. Health checks ensure traffic only goes to healthy targets. Blue-green or canary deployment can also be used when stronger release isolation is required.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q134. EC2 is unreachable—what do you check?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I check instance status, system status checks, network interface, subnet routing, security groups, NACLs, route tables and connectivity. I also verify whether the instance has the expected public/private connectivity and whether the operating system itself is healthy.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q135. Security Group vs NACL.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Security Groups are stateful and attached to resources such as EC2 network interfaces. Network ACLs operate at the subnet level and are stateless, meaning inbound and outbound rules need to be considered independently.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q136. ALB vs NLB.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+ALB operates at Layer 7 and supports HTTP/HTTPS routing such as host- and path-based routing. NLB operates at Layer 4 and is designed for high-performance TCP/UDP/TLS traffic.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q137. IAM role vs IAM user.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+An IAM user represents a long-term identity with credentials. An IAM role provides temporary credentials and is preferred for workloads and federated access where possible. Roles reduce the need for long-lived access keys.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q138. What is a NAT Gateway?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A NAT Gateway allows resources in private subnets to initiate outbound connections to the Internet while preventing unsolicited inbound Internet connections to those private resources.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q139. How does EKS work?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+EKS is AWS's managed Kubernetes service. AWS manages the Kubernetes control plane, while workloads run on managed node groups, self-managed nodes or other supported compute options. EKS integrates with AWS networking, IAM and load-balancing services.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q140. EKS Pod cannot connect to RDS—what do you investigate?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check DNS resolution, routing, security groups, NACLs, subnet configuration, RDS endpoint and port, Kubernetes network policies if applicable, and application credentials. I would also test connectivity from the Pod and review application logs.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q141. How do you monitor AWS applications/infrastructure?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use CloudWatch metrics and logs, AWS service-specific monitoring, alarms and dashboards. In Kubernetes environments I also use application logs, Pod metrics and Grafana dashboards. The key is to correlate infrastructure, application and deployment data.
+</div>
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- 6. MONITORING -->
+<!-- ========================================================= -->
+
+<section id="monitoring">
+<h2>6. Monitoring / Production Troubleshooting</h2>
+
+<div class="qa">
+<h3>Q142. What is Prometheus?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Prometheus is a monitoring and time-series database platform. It collects metrics, stores them as time-series data and provides PromQL for querying metrics. It is commonly used in Kubernetes environments.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q143. What is Grafana?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Grafana is a visualization and dashboarding platform. It can connect to data sources such as Prometheus and display metrics through dashboards and alerts.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q144. Why do we use Prometheus and Grafana?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Prometheus collects and stores metrics while Grafana provides visualization and dashboards. Together they provide visibility into infrastructure, Kubernetes and application behavior.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q145. How do you monitor AWS resources?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use CloudWatch metrics, logs and alarms, along with dashboards such as Grafana where available. I monitor resource utilization, availability, latency, errors and capacity.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q146. How do you troubleshoot a failed Jenkins pipeline?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I identify the failed stage, inspect console logs and compare with the last successful run. I check code changes, credentials, environment variables, agents, workspace, dependencies and external systems. Then I fix the root cause and rerun validation.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q147. Jenkins server is inaccessible—how do you troubleshoot?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I check whether the Jenkins process or Pod is running, then check CPU, memory, disk, networking and logs. If Jenkins is Kubernetes-based:
+<pre><code>kubectl get pods -n jenkins
+kubectl describe pod &lt;pod&gt; -n jenkins
+kubectl logs &lt;pod&gt; -n jenkins
+</code></pre>
+I also check the Service, Ingress or load balancer.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q148. Jenkins master is running out of disk space. What would you do?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would identify what is consuming disk:
+<pre><code>df -h
+du -sh *
+</code></pre>
+Then I would review old workspaces, build artifacts, logs and caches. I would apply appropriate retention policies and increase storage if required. I would avoid deleting active build data without understanding the impact.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q149. Build artifacts aren't getting uploaded to the artifact repository. How would you investigate?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check the pipeline logs around the upload step, repository URL, credentials, artifact path, network connectivity and repository availability. I would verify that the artifact was actually generated and that the pipeline has permission to publish it.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q150. Application becomes slow after deployment. How would you troubleshoot it?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would correlate the performance issue with the deployment. I would check application logs, CPU/memory, Pod restarts, response time, database performance, downstream dependencies and network behavior. I would compare metrics before and after the deployment and roll back if the release is clearly responsible and impact is significant.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q151. Production deployment fails. How would you troubleshoot and recover?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+First I would determine the deployment stage that failed and assess user impact. I would inspect deployment logs, Kubernetes events, application logs and configuration. If the failure cannot be corrected quickly and the previous version is healthy, I would roll back and then investigate the root cause.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q152. Production deployment caused downtime. How would you perform rollback and RCA?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+First restore service using the safest known-good version. Then collect deployment logs, monitoring data, application logs and change information. The RCA should identify the technical cause, contributing factors, why the issue was not detected earlier and preventive actions such as better testing, health checks or deployment gates.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q153. Monitoring shows increased response time but infrastructure appears healthy. How would you investigate?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would move up the stack from infrastructure to application behavior. I would check application logs, database latency, external APIs, thread pools, connection pools, garbage collection where relevant and recent application changes. Infrastructure being healthy does not necessarily mean the application is healthy.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q154. Production disk utilization reaches 95%. What immediate and long-term actions would you take?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Immediately I would identify large files, logs, temporary data and old artifacts and safely reclaim space according to operational procedures. Long-term, I would implement log rotation, retention policies, monitoring thresholds and capacity planning.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q155. Kubernetes Pods are healthy but users receive errors. How would you troubleshoot the complete request flow?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would trace:
+<pre><code>Client
+  ↓
+DNS
+  ↓
+Load Balancer
+  ↓
+Ingress
+  ↓
+Service
+  ↓
+Pod
+  ↓
+Application
+  ↓
+Dependencies
+</code></pre>
+At each layer I would verify connectivity, routing, health checks, ports, TLS, logs and metrics.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q156. A Docker container keeps restarting in production. How would you identify the root cause?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would check container logs, exit codes, health checks, resource limits and the application process. In Kubernetes I would use <code>kubectl describe pod</code> and <code>kubectl logs --previous</code>. I would also check whether configuration or secrets changed during deployment.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q157. How do you perform root-cause analysis for a production issue?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I establish the timeline, identify what changed, collect logs and metrics, reproduce the behavior where possible and isolate the technical cause. Then I document impact, root cause, contributing factors, resolution and preventive actions.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q158. Deployment succeeded but application does not work—what do you check?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I check Pod status, readiness probes, Service endpoints, Ingress rules, configuration, Secrets, application logs, image version and downstream dependencies. A successful deployment command only means Kubernetes accepted the desired state; it does not prove the application is functioning correctly.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q159. How do you prioritize multiple production alerts?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I prioritize based on customer impact, severity, scope and business criticality. A complete production outage or widespread customer impact takes priority over a warning with no current user impact. I also look for related alerts that may have a common root cause.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q160. What metrics do you monitor after a deployment?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I monitor error rate, response time, request volume, CPU and memory, Pod restarts, readiness, availability and key business/application metrics. I compare these with the pre-deployment baseline.
+</div>
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- 7. GIT -->
+<!-- ========================================================= -->
+
+<section id="git">
+<h2>7. Git</h2>
+
+<div class="qa">
+<h3>Q161. How do you resolve Git merge conflicts?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I first update my local branch, perform the merge or rebase and identify conflicting files. I review the conflicting sections, choose the correct implementation, test the result and then commit the resolution.
+<pre><code>git status
+git pull
+git merge &lt;branch&gt;
+# resolve conflicts
+git add .
+git commit
+</code></pre>
+</div>
+</div>
+
+<div class="qa">
+<h3>Q162. How do you choose a Git branching strategy?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I consider release frequency, team size, environment promotion and compliance requirements. A common model is feature branches with pull requests into a main or development branch, followed by controlled release promotion. The strategy should remain simple enough for the team to maintain.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q163. How does Git integrate with Jenkins?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Jenkins connects to the Git repository, checks out the required branch or commit and runs the pipeline. Webhooks can notify Jenkins when changes occur. Jenkins can also report build or validation status back to the source-control platform.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q164. Why did you choose Git as your source-control tool?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Git is distributed, widely adopted and supports branching, merging, history and collaboration. It integrates well with modern CI/CD platforms and code-review workflows.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q165. If you push code to another branch, will Jenkins pipeline trigger?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+It depends on the Jenkins trigger and branch configuration. If the webhook and job are configured to respond to that branch, the pipeline can trigger. If the job only monitors another branch, it will not.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q166. Why do you push code to main branch?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+In a controlled workflow, changes generally reach main through pull requests, reviews and automated checks. Direct pushes should usually be restricted for production repositories.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q167. How do you authenticate GitHub with Jenkins?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Using an appropriate credential such as SSH credentials, a token or application integration. The credential is stored securely in Jenkins and referenced by the pipeline rather than hard-coded.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q168. git merge vs git rebase.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Merge combines histories and creates a merge commit when necessary. Rebase moves commits onto a new base and creates a cleaner linear history. Rebase should be used carefully on shared branches because it rewrites commit history.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q169. git revert vs git reset.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+git revert creates a new commit that reverses an earlier commit and is safer for shared branches. git reset moves the branch pointer and can rewrite history depending on the option used, so it should be used carefully on shared branches.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q170. What is HEAD?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+HEAD is a reference to the currently checked-out commit or branch position. It represents the point from which the working tree is based.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q171. How do you protect the main branch?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use branch protection rules requiring pull requests, code reviews and successful CI checks. Direct pushes and force pushes should be restricted according to the organization's policy.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q172. What happens if someone accidentally pushes incorrect code to a shared branch?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would first assess whether the change has already been consumed by downstream builds. For a safe shared-branch correction, I would normally create a revert commit, validate it through CI and communicate the impact. If the code has already reached production, the deployment rollback process may also be required.
+</div>
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- 8. LINUX -->
+<!-- ========================================================= -->
+
+<section id="linux">
+<h2>8. Linux / Scripting</h2>
+
+<div class="qa">
+<h3>Q173. How do you replace a string in a Linux file?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A common approach is sed:
+<pre><code>sed -i 's/old-value/new-value/g' file.txt
+</code></pre>
+I would verify the result and ideally keep configuration changes under source control rather than modifying production files manually.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q174. You have a script that needs to run every two hours. How would you schedule it?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use cron:
+<pre><code>0 */2 * * * /path/to/script.sh
+</code></pre>
+I would also redirect output to logs and make sure the script has the appropriate permissions.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q175. How do you monitor Linux disk usage?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use:
+<pre><code>df -h
+du -sh *
+</code></pre>
+df shows filesystem utilization while du helps identify which directories consume space.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q176. How do you troubleshoot high CPU/memory?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would use commands such as <code>top</code>, <code>ps</code>, <code>free</code>, <code>vmstat</code> and application logs. I identify the process consuming resources, determine whether it is expected workload or abnormal behavior and correlate it with recent changes.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q177. What Linux automation have you performed?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My automation exposure has primarily been around CI/CD and operational workflows. I have used shell commands and scripts as part of troubleshooting, deployment support, log analysis and pipeline activities. I would describe this as operational automation rather than extensive Linux application development.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q178. How would you automate repetitive operational tasks?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I first identify the repeatable steps and inputs, then create a script or pipeline stage with validation and logging. For larger workflows I would use Jenkins, Terraform, Ansible or another automation platform depending on the task.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q179. How would you troubleshoot a Linux/server issue?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would start with availability and resource checks, then inspect processes, disk, memory, CPU, networking and system/application logs. I would correlate the issue with recent changes and test the suspected cause.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q180. What scripting languages have you used?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I have worked with shell scripting and have exposure to Python and Groovy in CI/CD workflows. My Python and Groovy experience is more focused on automation support, pipeline workflows and troubleshooting than extensive software development.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q181. Give an example of automation you implemented.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+One example is supporting Jenkins-driven deployment workflows where pipeline automation generated deployment requests and interacted with DME APIs. I monitored the workflow, investigated failures and validated the resulting Kubernetes deployment.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q182. How would you check whether a process is running?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Examples include:
+<pre><code>ps -ef | grep process-name
+pgrep -af process-name
+systemctl status service-name
+</code></pre>
+</div>
+</div>
+
+<div class="qa">
+<h3>Q183. How would you search logs for an error?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I commonly use grep:
+<pre><code>grep -i "error" application.log
+grep -i "exception" application.log
+tail -f application.log
+</code></pre>
+For larger systems, I would use centralized logging and search based on timestamp, service, Pod and correlation identifiers.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q184. How would you use a script inside Jenkins?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A Jenkins pipeline can execute shell or other supported scripts as pipeline steps:
+<pre><code>stage('Validation') {
+    steps {
+        sh './validate.sh'
+    }
+}
+</code></pre>
+The script should return an appropriate exit code so Jenkins can determine success or failure.
+</div>
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- 9. SECURITY -->
+<!-- ========================================================= -->
+
+<section id="security">
+<h2>9. Security / DevSecOps</h2>
+
+<div class="qa">
+<h3>Q185. How should secrets be managed in CI/CD?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Secrets should be stored in a dedicated secret-management system or CI/CD credential store and injected at runtime. They should not be committed to Git, embedded in Docker images or exposed in pipeline output.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q186. How do you prevent credentials from appearing in Jenkins logs?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Use Jenkins Credentials rather than hard-coded values, use credential-binding mechanisms and avoid commands that echo secrets. Jenkins masking should be enabled, but I would not rely on masking alone.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q187. How would you add security scanning to a CI/CD pipeline?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would add appropriate scanning stages for source code, dependencies, container images and infrastructure. The pipeline can enforce severity thresholds so builds or deployments stop when critical vulnerabilities are detected.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q188. How do you secure Terraform state?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Use encrypted remote state, restricted access, versioning and locking. State should be treated as sensitive because it can contain resource information and potentially sensitive values.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q189. How have you used SonarQube?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I have worked with SonarQube as part of CI/CD quality validation. The pipeline can run analysis and evaluate the configured quality gate before allowing promotion to later stages.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q190. What is SAST?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Static Application Security Testing analyzes source code or compiled code for security vulnerabilities without executing the application. It can be integrated into CI/CD to identify issues earlier in the development lifecycle.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q191. What is container/image scanning?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Container scanning checks images for known vulnerabilities, outdated packages, insecure configurations and sometimes secrets. It helps prevent vulnerable images from being promoted into production.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q192. How do you secure Kubernetes Secrets?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I restrict RBAC access, avoid committing Secrets to source control, use encryption at rest where supported and prefer an external secret-management solution when appropriate. Applications should receive only the secrets they need.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q193. How do you control access to production deployments?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Use RBAC, least privilege, protected branches, CI/CD approvals and controlled deployment credentials. Production deployment should be auditable and ideally tied to an approved change or release process.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q194. How do you secure cloud credentials used by pipelines?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Prefer short-lived credentials or workload identity over long-lived access keys. Restrict permissions using least privilege, store credentials securely, rotate them where necessary and audit their usage.
+</div>
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- 10. PROJECT / EXPERIENCE -->
+<!-- ========================================================= -->
+
+<section id="project">
+<h2>10. Project / Experience</h2>
+
+<div class="qa">
+<h3>Q195. Tell me about yourself.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I have around 10 years of experience across build engineering and DevOps, with several years of cloud and Kubernetes experience. My background is focused on CI/CD automation, Jenkins, Git, Docker, Kubernetes, Terraform-based workflows and production troubleshooting. In my recent work I have supported Jenkins pipelines, Kubernetes deployments, DME-driven deployment workflows, Spinnaker, Rafay and platform onboarding. I am particularly comfortable troubleshooting CI/CD and Kubernetes issues and coordinating with development and platform teams to resolve them.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q196. Explain your current project.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My current environment involves enterprise application onboarding and deployment into Kubernetes-based environments. The workflow involves an internal portal, platform-managed Backstage, Terraform-based provisioning, Rafay environment/project configuration and Jenkins-driven CI/CD. Jenkins workflows can interact with DME APIs and support deployment through Spinnaker. My responsibilities include pipeline support, deployment troubleshooting, Kubernetes troubleshooting and coordination with platform and infrastructure teams.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q197. Explain your day-to-day activities.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My day-to-day work includes monitoring and supporting CI/CD pipelines, investigating build and deployment failures, reviewing Jenkins logs, validating Kubernetes workloads, troubleshooting Pods and Services, checking application and platform logs, supporting environment configuration and coordinating with development, infrastructure and platform teams.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q198. What is your role in your current project?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My role is primarily focused on DevOps and CI/CD support, deployment workflows and production troubleshooting. I work with Jenkins, Git, Kubernetes, Helm, Terraform-based provisioning, Rafay and deployment platforms. I also analyze logs and pipeline behavior and coordinate with other teams to resolve issues.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q199. How many years of Kubernetes experience do you have?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would state the actual number based on my resume. My Kubernetes work includes application deployments, Pod and Deployment troubleshooting, Services, scaling, configuration, Helm, Secrets and production issue investigation. I have also worked with EKS environments.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q200. Do you create pipelines or mainly support deployments?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I have experience with both supporting and working on pipeline workflows. My strongest area is CI/CD support, troubleshooting and deployment automation. I have worked with Jenkins/Groovy-based workflows, analyzed pipeline stages and configurations, supported DME deployment workflows and helped troubleshoot failures rather than positioning myself primarily as a software developer.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q201. Is your work ticket/Jira based?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Yes. In an enterprise environment, work is commonly tracked through Jira or ServiceNow. Issues include deployment failures, environment problems, application onboarding, production incidents and change-related activities. I use the ticket information, logs and communication with other teams to investigate and document resolution.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q202. What tools are you using in your project?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My environment includes Git, Jenkins, Artifactory, ServiceNow, Jira, Confluence, Bitbucket, Docker, SonarQube, Fortify, FOSS, Flyway, EKS/Kubernetes, Backstage, Terraform templates, Rafay, Helm, Spinnaker, Groovy, Python and Grafana.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q203. What projects have you worked on?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My experience has mainly been around enterprise CI/CD, build and release automation, Kubernetes deployments, cloud environments and platform onboarding. I have worked across Jenkins automation, Kubernetes/EKS deployments, infrastructure automation, application onboarding and production troubleshooting.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q204. Describe your recent project/work.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+In my recent work, application onboarding flows through internal platform tooling and Terraform-based automation before Kubernetes deployment. Jenkins supports CI/CD and deployment workflows, including integrations with DME and Spinnaker. I support pipeline execution, investigate failures, validate deployment configuration and troubleshoot Kubernetes workloads.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q205. What challenges did you encounter?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+Common challenges include pipeline failures, incorrect deployment configuration, Kubernetes resource issues, connectivity problems, environment-specific configuration and failures across multiple integrated systems. The challenge is often identifying which layer is actually responsible because the workflow crosses CI/CD, platform automation, infrastructure and application components.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q206. How did you resolve those challenges?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I use a structured troubleshooting approach. I start from the failed stage or affected component, review logs and configuration, compare with a known-good deployment and trace dependencies. I then coordinate with the appropriate development, infrastructure or platform team when the issue crosses ownership boundaries.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q207. What was the most difficult production issue you handled?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+A strong example would be a deployment where the pipeline completed but the application had issues after deployment. I would explain how I traced the issue through Kubernetes resources, application logs, configuration, Services and dependencies, identified the failing component, coordinated with the responsible team and validated the recovery. The important part is to explain the troubleshooting process rather than exaggerate ownership.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q208. Explain one deployment failure you troubleshot.</h3>
+<div class="answer">
+<strong>Answer:</strong>
+One example is a Kubernetes deployment where the deployment workflow completed but the application workload did not behave as expected. I checked the Jenkins pipeline stage and deployment request, reviewed Kubernetes Pod status and events, analyzed application and platform logs, and checked Helm values and configuration such as ConfigMaps and Secret references. After identifying the configuration or deployment issue, I coordinated with the appropriate team and validated the corrected deployment.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q209. What part of the CI/CD pipeline do you personally own?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+My strongest responsibility is supporting and troubleshooting the CI/CD workflow. I monitor Jenkins pipelines, analyze stage failures, review configurations and logs, support deployment workflows and coordinate issue resolution. I would not describe myself as the sole owner of every pipeline component because enterprise pipelines often involve multiple platform and application teams.
+</div>
+</div>
+
+<div class="qa">
+<h3>Q210. What would you improve in your current CI/CD process?</h3>
+<div class="answer">
+<strong>Answer:</strong>
+I would focus on reliability, observability and reducing manual intervention. Improvements could include stronger automated validation, standardized pipeline templates, better quality and security gates, clearer deployment health checks, automated rollback criteria, improved logging and dashboards, and consistent artifact versioning. I would prioritize improvements based on the failures and bottlenecks observed in the current process.
+</div>
+</div>
+
+</section>
+
+</div>
+
+<footer>
+    DevOps Interview Notes • CI/CD • Kubernetes • Docker • Terraform • AWS • Git • Linux • DevSecOps
+</footer>
+
+</body>
+</html>
